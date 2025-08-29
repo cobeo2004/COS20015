@@ -1,10 +1,10 @@
 --- POSTGRESQL - Relation
 CREATE TABLE IF NOT EXISTS patients (
     id UUID NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
-    name TEXT NOT NULL,
-    email TEXT NOT NULL,
-    phone TEXT NOT NULL,
-    address TEXT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone VARCHAR(100) NOT NULL,
+    address VARCHAR(100) NOT NULL,
 );
 
 --- Check constraint
@@ -15,10 +15,10 @@ ALTER TABLE patients ADD CONSTRAINT check_name_length CHECK (length(name) > 0 AN
 
 CREATE TABLE IF NOT EXISTS physiotherapists (
     id UUID NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
-    name TEXT NOT NULL,
-    email TEXT NOT NULL,
-    phone TEXT NOT NULL,
-    address TEXT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone VARCHAR(100) NOT NULL,
+    address VARCHAR(100) NOT NULL,
 );
 
 --- Check constraint
@@ -34,8 +34,8 @@ CREATE TABLE IF NOT EXISTS appointments (
     physiotherapist_id UUID NOT NULL,
     appointment_date DATE NOT NULL,
     appointment_time TIME NOT NULL,
-    duration NUMERIC NOT NULL,
-    note TEXT,
+    duration TINYINT NOT NULL,
+    note VARCHAR(500),
 );
 
 

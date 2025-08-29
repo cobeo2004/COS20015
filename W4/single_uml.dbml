@@ -1,0 +1,14 @@
+Project COS20015_W4 {
+  database_type: "PostgreSQL"
+}
+
+Table appointments {
+  id uuid [pk, not null]
+  patient_name VARCHAR(100) [not null]
+  physiotherapist_name VARCHAR(100) [not null]
+  appointment_date date [not null]
+  appointment_time time [not null]
+  duration TINYINT [not null]
+  note VARCHAR(500)
+}
+

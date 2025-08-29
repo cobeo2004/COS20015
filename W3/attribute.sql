@@ -4,12 +4,12 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE IF NOT EXISTS appointments (
     id UUID NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
-    patient_name TEXT NOT NULL,
-    physiotherapist_name TEXT NOT NULL,
+    patient_name VARCHAR(100) NOT NULL,
+    physiotherapist_name VARCHAR(100) NOT NULL,
     appointment_date DATE NOT NULL,
     appointment_time TIME NOT NULL,
     duration NUMERIC NOT NULL,
-    note TEXT,
+    note VARCHAR(500),
 );
 
 --- Check constraint
