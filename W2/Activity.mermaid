@@ -1,0 +1,7 @@
+graph TD
+  A[Patient portal + reception forms] -->|Structured fields| S[(Operational DB)]
+  B[Clinician notes, PDFs, images, audio] --> U[(Unstructured store)]
+  C[Wearables / FHIR JSON / XML] --> M[(Semi-structured lake)]
+  M -->|ETL / parsing| S
+  U -->|NLP / OCR / tagging| M
+  S --> R[Reports & dashboards]

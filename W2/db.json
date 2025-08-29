@@ -1,0 +1,82 @@
+{
+    "patients": [
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440101",
+            "name": "Sam Huynh",
+            "preferred_physiotherapist": "550e8400-e29b-41d4-a716-446655440110"
+        },
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440102",
+            "name": "Andrea Kostyanska",
+            "preferred_physiotherapist": "550e8400-e29b-41d4-a716-446655440111"
+        },
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440103",
+            "name": "Philip Chen",
+            "preferred_physiotherapist": "550e8400-e29b-41d4-a716-446655440110"
+        }
+    ],
+    "physiotherapists": [
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440110",
+            "name": "Bruno",
+            "specialization": "550e8400-e29b-41d4-a716-446655440020"
+        },
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440111",
+            "name": "Sylvia",
+            "specialization": "550e8400-e29b-41d4-a716-446655440021"
+        }
+    ],
+    "physio_type": [
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440020",
+            "name": "Orthopedic Physiotherapy",
+            "description": "Specializes in treating musculoskeletal injuries and conditions affecting bones, joints, and muscles."
+        },
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440021",
+            "name": "Neurological Physiotherapy",
+            "description": "Focuses on treating patients with neurological conditions such as stroke, spinal cord injuries, and Parkinson's disease."
+        },
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440022",
+            "name": "Sports Physiotherapy",
+            "description": "Specializes in preventing and treating sports-related injuries and helping athletes optimize their performance."
+        },
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440023",
+            "name": "Pediatric Physiotherapy",
+            "description": "Focuses on treating infants, children, and adolescents with developmental, neurological, or orthopedic conditions."
+        }
+    ],
+    "appointments": [
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440120",
+            "patient_id": "550e8400-e29b-41d4-a716-446655440101",
+            "physiotherapist_id": "550e8400-e29b-41d4-a716-446655440110",
+            "appointment_date": "2023-04-17T09:00:00Z",
+            "duration_minutes": 30,
+            "notes": "Rehabilitating after a broken wrist.",
+            "status": "scheduled"
+        },
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440121",
+            "patient_id": "550e8400-e29b-41d4-a716-446655440102",
+            "physiotherapist_id": "550e8400-e29b-41d4-a716-446655440111",
+            "appointment_date": "2023-04-18T15:30:00Z",
+            "duration_minutes": 30,
+            "notes": "Problem with her lumbar spine.",
+            "status": "scheduled"
+        },
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440122",
+            "patient_id": "550e8400-e29b-41d4-a716-446655440103",
+            "physiotherapist_id": "550e8400-e29b-41d4-a716-446655440110",
+            "appointment_date": "2023-04-18T22:30:00Z",
+            "duration_minutes": 40,
+            "notes": "Problem with his neck.",
+            "status": "scheduled"
+        }
+    ]
+}

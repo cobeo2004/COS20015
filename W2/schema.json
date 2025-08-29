@@ -1,0 +1,103 @@
+{
+  "patients": {
+    "type": "array",
+    "properties": {
+      "id": {
+        "type": "string",
+        "optional": "false",
+        "default": "gen_random_uuid()"
+      },
+      "name": {
+        "type": "string",
+        "optional": "false",
+        "check": "name.length > 0 && name.length <= 100"
+      },
+      "preferred_physiotherapist": {
+        "type": "string",
+        "optional": "false",
+        "check": "preferred_physiotherapist.length > 0 && preferred_physiotherapist.length <= 100",
+        "relation": "physiotherapists.id"
+      }
+    }
+  },
+  "physiotherapists": {
+    "type": "array",
+    "properties": {
+      "id": {
+        "type": "string",
+        "optional": "false",
+        "default": "gen_random_uuid()"
+      },
+      "name": {
+        "type": "string",
+        "optional": "false",
+        "check": "name.length > 0 && name.length <= 100"
+      },
+      "specialization": {
+        "type": "string",
+        "optional": "false",
+        "check": "specialization.length > 0 && specialization.length <= 100",
+        "relation": "physio_type.id"
+      }
+    }
+  },
+  "physio_type": {
+    "type": "array",
+    "properties": {
+      "id": {
+        "type": "string",
+        "optional": "false",
+        "default": "gen_random_uuid()"
+      },
+      "name": {
+        "type": "string",
+        "optional": "false",
+        "check": "name.length > 0 && name.length <= 100"
+      },
+      "description": {
+        "type": "string",
+        "optional": "true",
+        "check": "description.length <= 500"
+      }
+    }
+  },
+  "appointments": {
+    "type": "array",
+    "properties": {
+      "id": {
+        "type": "string",
+        "optional": "false",
+        "default": "gen_random_uuid()"
+      },
+      "patient_id": {
+        "type": "string",
+        "optional": "false",
+        "relation": "patients.id"
+      },
+      "physiotherapist_id": {
+        "type": "string",
+        "optional": "false",
+        "relation": "physiotherapists.id"
+      },
+      "appointment_date": {
+        "type": "datetime",
+        "optional": "false"
+      },
+      "duration_minutes": {
+        "type": "integer",
+        "optional": "false",
+        "check": "duration_minutes > 0 && duration_minutes <= 180"
+      },
+      "notes": {
+        "type": "string",
+        "optional": "true",
+        "check": "notes.length <= 1000"
+      },
+      "status": {
+        "type": "string",
+        "optional": "false",
+        "check": "status in ['scheduled', 'completed', 'cancelled', 'no-show']"
+      }
+    }
+  }
+}
