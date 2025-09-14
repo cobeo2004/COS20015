@@ -1,0 +1,118 @@
+// --- ENUMS (Postgres enums need manual creation; here we just document) ---
+Enum countries {
+  "Australia"
+  "United States of America"
+  "Vietnam"
+}
+Enum game_genres {
+  "Adventure"
+  "Horror"
+}
+Enum payment_methods {
+  "Visa"
+  "MasterCard"
+  "No"
+}
+
+// --- TABLES ---
+
+Table players {
+  id uuid [pk]
+  username varchar(50) [not null, unique]
+  email varchar(255) [not null, unique]
+  country countries
+  level tinyint [note: "CHECK (level <= 100)"]
+  total_score bigint
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table player_profiles {
+  id uuid [pk]
+  player_id uuid [ref: > players.id, unique]
+  bio varchar(255)
+  avatar_url char(400)
+  settings jsonb
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table developers {
+  id uuid [pk]
+  name varchar(200) [not null]
+  email varchar(255)
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table games {
+  id uuid [pk]
+  title varchar(255) [not null]
+  genre game_genres
+  release_date timestamp
+  price numeric(10,2)
+  developer_id uuid [ref: > developers.id]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table sessions {
+  id uuid [pk]
+  player_id uuid [ref: > players.id]
+  game_id uuid [ref: > games.id]
+  start_time timestamp
+  end_time timestamp
+  score bigint
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table achievements {
+  id uuid [pk]
+  game_id uuid [ref: > games.id]
+  name varchar(200) [not null]
+  description text
+  points int
+  unlock_criteria jsonb
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table player_achievements {
+  id uuid [pk]
+  player_id uuid [ref: > players.id]
+  achievement_id uuid [ref: > achievements.id]
+  unlocked_at timestamp
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table leaderboards {
+  id uuid [pk]
+  game_id uuid [ref: > games.id]
+  type varchar(50)
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table leaderboard_entities {
+  id uuid [pk]
+  leaderboard_id uuid [ref: > leaderboards.id]
+  player_id uuid [ref: > players.id]
+  rank int
+  score bigint
+  achieved_at timestamp
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table purchases {
+  id uuid [pk]
+  player_id uuid [ref: > players.id]
+  game_id uuid [ref: > games.id]
+  purchase_date timestamp
+  amount numeric(10,2)
+  payment_method payment_methods
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
