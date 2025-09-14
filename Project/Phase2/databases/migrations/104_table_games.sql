@@ -3,7 +3,7 @@
 -- Author: Xuan Tuan Minh Nguyen
 -- This file is used to create the games table for the database
 
-CREATE TABLE games (
+CREATE TABLE IF NOT EXISTS games (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title VARCHAR(255) NOT NULL,
   genre game_genres,

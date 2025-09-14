@@ -3,7 +3,7 @@
 -- Author: Xuan Tuan Minh Nguyen
 -- This file is used to create the developers table for the database
 
-CREATE TABLE developers (
+CREATE TABLE IF NOT EXISTS developers (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(200) NOT NULL,
   email VARCHAR(255),

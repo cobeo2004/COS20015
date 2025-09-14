@@ -3,7 +3,7 @@
 -- Author: Xuan Tuan Minh Nguyen
 -- This file is used to create the player_achievements table for the database
 
-CREATE TABLE player_achievements (
+CREATE TABLE IF NOT EXISTS player_achievements (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   player_id UUID NOT NULL REFERENCES players(id) ON DELETE CASCADE,
   achievement_id UUID NOT NULL REFERENCES achievements(id) ON DELETE CASCADE,

@@ -3,7 +3,7 @@
 -- Author: Xuan Tuan Minh Nguyen
 -- This file is used to create the purchases table for the database
 
-CREATE TABLE purchases (
+CREATE TABLE IF NOT EXISTS purchases (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   player_id UUID NOT NULL REFERENCES players(id) ON DELETE CASCADE,
   game_id UUID NOT NULL REFERENCES games(id) ON DELETE CASCADE,
