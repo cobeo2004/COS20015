@@ -9,13 +9,7 @@
 
 \echo 'Testing database population functions...'
 
--- Test 1: Clear existing data
-SELECT clear_database();
-
--- Test 2: Populate the entire database
-SELECT populate_database();
-
--- Test 3: Verify table counts
+-- Test 1: Verify table counts
 \echo 'Verifying table counts:'
 
 SELECT
@@ -49,7 +43,7 @@ SELECT
     'purchases' as table_name, COUNT(*) as record_count FROM purchases
 ORDER BY record_count DESC;
 
--- Test 4: Sample data verification
+-- Test 2: Sample data verification
 \echo 'Sample data from largest tables:'
 
 -- Sample from sessions (largest table)
