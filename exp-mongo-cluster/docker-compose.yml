@@ -1,0 +1,25 @@
+# dev.docker-compose.yaml (Example Snippet)
+volumes:
+  mongodb_data:
+    name: mongodb_cluster_data # Use a named volume for persistence
+
+services:
+  mongodb-cluster:
+    build:
+      context: . # Path to the directory containing the Dockerfile
+      dockerfile: builds/Dockerfile
+    container_name: mongodb-cluster
+    ports:
+      - "27017:27017" # Expose router port to host
+      # - "27018:27018" # Optional: Expose config server
+      # - "27019:27019" # Optional: Expose shard
+    volumes:
+      - mongodb_data:/data # Mount named volume to persist data
+    # Add healthcheck, restart policy etc. as needed
+    # healthcheck:
+    #   test: ["CMD", "mongosh", "--port", "27017", "--eval", "db.adminCommand('ping')"]
+    #   interval: 20s
+    #   timeout: 10s
+    #   retries: 5
+    #   start_period: 30s
+    # restart: unless-stopped
