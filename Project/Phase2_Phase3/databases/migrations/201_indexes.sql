@@ -1,4 +1,4 @@
--- ndexes.sql
+-- indexes.sql
 -- Index creation for query optimization
 -- Author: Xuan Tuan Minh Nguyen
 
@@ -64,6 +64,6 @@ CREATE INDEX IF NOT EXISTS idx_purchases_amount ON purchases(amount);
 -- Composite index for player purchase history
 CREATE INDEX IF NOT EXISTS idx_purchases_player_date ON purchases(player_id, purchase_date DESC);
 
--- JSONB indexes for flexible queries
+-- JSONB indexes for flexible queries using GIN indexing technique
 CREATE INDEX IF NOT EXISTS idx_player_profiles_settings ON player_profiles USING GIN(settings);
 CREATE INDEX IF NOT EXISTS idx_achievements_unlock_criteria ON achievements USING GIN(unlock_criteria);

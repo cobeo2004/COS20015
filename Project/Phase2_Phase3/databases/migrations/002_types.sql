@@ -4,6 +4,6 @@
 -- This file is used to create the types for the database
 
 
-CREATE TYPE IF NOT EXISTS countries AS ENUM ('AU', 'US', 'UK', 'JP', 'VN'); -- extend list as needed
-CREATE TYPE IF NOT EXISTS game_genres AS ENUM ('RPG', 'FPS', 'Strategy', 'Puzzle', 'Sports');
-CREATE TYPE IF NOT EXISTS payment_methods AS ENUM ('CreditCard', 'PayPal', 'Crypto', 'BankTransfer');
+CREATE TYPE countries AS ENUM ('AU', 'US', 'UK', 'JP', 'VN'); -- extend list as needed
+CREATE TYPE game_genres AS ENUM ('RPG', 'FPS', 'Strategy', 'Puzzle', 'Sports');
+CREATE TYPE payment_methods AS ENUM ('CreditCard', 'PayPal', 'Crypto', 'BankTransfer');
