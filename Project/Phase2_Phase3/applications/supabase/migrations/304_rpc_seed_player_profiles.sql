@@ -9,8 +9,8 @@ DELETE FROM player_profiles;
 -- Create profiles for all players
 FOR player_record IN
 SELECT id
-FROM players LOOP
-INSERT INTO player_profiles (player_id, bio, avatar_url, settings)
+FROM "public"."players" LOOP
+INSERT INTO "public"."player_profiles" (player_id, bio, avatar_url, settings)
 VALUES (
         player_record.id,
         'Gaming enthusiast who loves ' || CASE
