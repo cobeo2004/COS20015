@@ -1,114 +1,256 @@
-import { Link } from "react-router";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { RiArrowLeftLine, RiBarChartBoxLine, RiDownloadLine, RiFilter3Line } from "@remixicon/react";
+import { useState } from "react";
+import { ReportLayout } from "@/components/reports/ReportLayout";
+import { ReportDataTable } from "@/components/reports/ReportDataTable";
+import {
+  ReportMetrics,
+  CommonMetrics,
+} from "@/components/reports/ReportMetrics";
+import { useGamePerformanceReport } from "@/hooks/useGamePerformanceReport";
+import { RiGamepadLine, RiTrophyLine } from "@remixicon/react";
 
 export default function Report1Page() {
+  const { data, isLoading } = useGamePerformanceReport();
+
+  // Export state
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportingType, setExportingType] = useState<"csv" | "pdf" | null>(
+    null
+  );
+  const [exportError, setExportError] = useState<string | null>(null);
+  const [exportSuccess, setExportSuccess] = useState<string | null>(null);
+
+  // Export handlers
+  const handleExportCSV = async () => {
+    if (!data) return;
+
+    setIsExporting(true);
+    setExportingType("csv");
+    setExportError(null);
+    setExportSuccess(null);
+
+    try {
+      const { CSVExportService } = await import(
+        "@/lib/services/CSVExportService"
+      );
+
+      // Prepare export data
+      const exportData = data.map((item) => ({
+        "Game Title": String(item.game_title || ""),
+        Genre: String(item.genre || ""),
+        Developer: String(item.developer_name || ""),
+        Revenue: `$${Number(item.total_revenue || 0).toFixed(2)}`,
+        Players: Number(item.unique_players || 0).toString(),
+        "Playtime (hrs)": Number(item.total_playtime_hours || 0).toFixed(1),
+        Rating: item.average_rating ? Number(item.average_rating).toFixed(1) : "N/A",
+      }));
+
+      // Generate filename with current date
+      const date = new Date().toISOString().split("T")[0];
+      const filename = `game-performance-report-${date}.csv`;
+
+      CSVExportService.quickExport(exportData, filename);
+      setExportSuccess(
+        `Successfully exported ${exportData.length} rows to CSV`
+      );
+    } catch (error) {
+      setExportError(
+        `CSV export failed: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
+    } finally {
+      setIsExporting(false);
+      setExportingType(null);
+    }
+  };
+
+  const handleExportPDF = async () => {
+    if (!data) return;
+
+    setIsExporting(true);
+    setExportingType("pdf");
+    setExportError(null);
+    setExportSuccess(null);
+
+    try {
+      const { PDFExportService } = await import(
+        "@/lib/services/PDFExportService"
+      );
+
+      // Prepare export data - only include simple fields for PDF
+      const exportData = {
+        data: data.map((item) => {
+          // Debug log to see what we're working with
+          console.log('Exporting item:', item);
+
+          return {
+            "Game Title": String(item.game_title || ""),
+            "Genre": String(item.genre || ""),
+            "Developer": String(item.developer_name || ""),
+            "Revenue": `$${Number(item.total_revenue || 0).toFixed(2)}`,
+            "Players": Number(item.unique_players || 0).toString(),
+            "Playtime (hrs)": Number(item.total_playtime_hours || 0).toFixed(1),
+            "Rating": item.average_rating ? Number(item.average_rating).toFixed(1) : "N/A",
+          };
+        }),
+        title: "Game Performance Report",
+        description:
+          "Comprehensive analysis of game revenue, playtime, player engagement, and ratings",
+      };
+
+      // Generate filename with current date
+      const date = new Date().toISOString().split("T")[0];
+      const filename = `game-performance-report-${date}.pdf`;
+
+      PDFExportService.quickExport(exportData.data, exportData.title, filename.replace('.pdf', ''));
+      setExportSuccess(`Successfully exported report to PDF`);
+    } catch (error) {
+      setExportError(
+        `PDF export failed: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
+    } finally {
+      setIsExporting(false);
+      setExportingType(null);
+    }
+  };
+
+  // Calculate summary metrics
+  const summaryMetrics =
+    data && data.length > 0
+      ? {
+          totalRevenue: data.reduce((sum, item) => sum + item.total_revenue, 0),
+          totalPlayers: data.reduce(
+            (sum, item) => sum + item.unique_players,
+            0
+          ),
+          totalPlaytime: data.reduce(
+            (sum, item) => sum + item.total_playtime_hours,
+            0
+          ),
+          avgRating:
+            data.reduce((sum, item) => sum + (item.average_rating || 0), 0) /
+            data.filter((g) => g.average_rating).length,
+          totalGames: data.length,
+          topPerformingGame: data.reduce((top, current) =>
+            current.total_revenue > top.total_revenue ? current : top
+          ),
+        }
+      : null;
+
+  // Summary metrics for display
+  const displayMetrics = summaryMetrics
+    ? [
+        CommonMetrics.totalRevenue(summaryMetrics.totalRevenue),
+        CommonMetrics.totalPlayers(summaryMetrics.totalPlayers),
+        CommonMetrics.totalPlaytime(summaryMetrics.totalPlaytime),
+        CommonMetrics.averageRating(summaryMetrics.avgRating),
+        {
+          title: "Total Games",
+          value: summaryMetrics.totalGames,
+          icon: RiGamepadLine,
+          color: "info" as const,
+        },
+        {
+          title: "Top Game",
+          value: summaryMetrics.topPerformingGame.game_title,
+          subtitle: `$${summaryMetrics.topPerformingGame.total_revenue.toLocaleString()}`,
+          icon: RiTrophyLine,
+          color: "success" as const,
+          formatter: (v: string) =>
+            v.length > 20 ? v.substring(0, 20) + "..." : v,
+        },
+      ]
+    : [];
+
+  // Table columns
+  const tableColumns = [
+    {
+      key: "game_title",
+      label: "Game Title",
+      sortable: true,
+    },
+    {
+      key: "genre",
+      label: "Genre",
+      sortable: true,
+    },
+    {
+      key: "developer_name",
+      label: "Developer",
+      sortable: true,
+    },
+    {
+      key: "total_revenue",
+      label: "Revenue",
+      sortable: true,
+      align: "right" as const,
+      format: (value: number) => `$${value.toLocaleString()}`,
+    },
+    {
+      key: "unique_players",
+      label: "Players",
+      sortable: true,
+      align: "right" as const,
+      format: (value: number) => value.toLocaleString(),
+    },
+    {
+      key: "total_playtime_hours",
+      label: "Playtime (hrs)",
+      sortable: true,
+      align: "right" as const,
+      format: (value: number) => value.toFixed(1),
+    },
+    {
+      key: "average_rating",
+      label: "Rating",
+      sortable: true,
+      align: "right" as const,
+      format: (value: number) => value?.toFixed(1) || "N/A",
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b">
-        <div className="container mx-auto px-6 py-8">
-          <Link to="/admin/reports">
-            <Button variant="ghost" size="sm" className="mb-4">
-              <RiArrowLeftLine className="h-4 w-4 mr-2" />
-              Back to Reports
-            </Button>
-          </Link>
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-4xl font-bold">Game Performance Analytics</h1>
-                <Badge>Report #1</Badge>
-              </div>
-              <p className="text-muted-foreground">
-                Comprehensive analysis of game revenue, playtime, player engagement, and ratings
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline">
-                <RiFilter3Line className="h-4 w-4 mr-2" />
-                Filters
-              </Button>
-              <Button variant="outline" disabled>
-                <RiDownloadLine className="h-4 w-4 mr-2" />
-                Export CSV
-              </Button>
-              <Button variant="outline" disabled>
-                <RiDownloadLine className="h-4 w-4 mr-2" />
-                Export PDF
-              </Button>
-            </div>
-          </div>
+    <ReportLayout
+      title="Game Performance Analytics"
+      description="Comprehensive analysis of game revenue, playtime, player engagement, and ratings"
+      reportNumber="#1"
+      onExportCSV={handleExportCSV}
+      onExportPDF={handleExportPDF}
+      isExportingCSV={isExporting && exportingType === "csv"}
+      isExportingPDF={isExporting && exportingType === "pdf"}
+      isLoading={isLoading}
+    >
+      {/* Export Status Messages */}
+      {exportError && (
+        <div className="mb-4 p-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded-md">
+          {exportError}
         </div>
+      )}
+      {exportSuccess && (
+        <div className="mb-4 p-3 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md">
+          {exportSuccess}
+        </div>
+      )}
+
+      {/* Summary Metrics */}
+      <div className="mb-8">
+        <ReportMetrics
+          metrics={displayMetrics}
+          columns={3}
+          isLoading={isLoading}
+        />
       </div>
 
-      {/* Content */}
-      <div className="container mx-auto px-6 py-8">
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <RiBarChartBoxLine className="h-5 w-5" />
-              Report Details
-            </CardTitle>
-            <CardDescription>
-              This report will be implemented in Phase 4 with full data integration
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h4 className="font-medium mb-2">Data Sources</h4>
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="outline">Games Table (Structured)</Badge>
-                <Badge variant="outline">Sessions Table (Structured)</Badge>
-                <Badge variant="outline">Purchases Table (Structured)</Badge>
-                <Badge variant="outline">Developers Table (Structured)</Badge>
-                <Badge variant="outline">Game Metadata (JSONB)</Badge>
-                <Badge variant="outline">Developer Metadata (JSONB)</Badge>
-                <Badge variant="outline">Cover Images (URLs)</Badge>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-medium mb-2">Key Metrics</h4>
-              <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                <li>Total revenue by game and genre</li>
-                <li>Total playtime and active players</li>
-                <li>Average rating from JSONB metadata</li>
-                <li>Review counts and tag analysis</li>
-                <li>Developer performance by company size</li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-medium mb-2">Planned Features</h4>
-              <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                <li>Filter by date range, genre, developer, minimum rating</li>
-                <li>Sort by revenue, playtime, player count, rating</li>
-                <li>Search by game title or tags</li>
-                <li>Interactive charts (revenue trends, rating distribution)</li>
-                <li>Export to CSV and PDF formats</li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Placeholder for actual report content */}
-        <Card>
-          <CardContent className="py-12">
-            <div className="text-center text-muted-foreground">
-              <RiBarChartBoxLine className="h-16 w-16 mx-auto mb-4 opacity-50" />
-              <p className="text-lg font-medium mb-2">Report Implementation Pending</p>
-              <p className="text-sm">
-                This report will be fully implemented in Phase 4 with real-time data,
-                <br />
-                filtering, sorting, and export capabilities.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+      {/* Data Table */}
+      <ReportDataTable
+        data={data || []}
+        columns={tableColumns}
+        showSearch={true}
+        showPagination={true}
+        emptyMessage="No games found in the dataset"
+      />
+    </ReportLayout>
   );
 }

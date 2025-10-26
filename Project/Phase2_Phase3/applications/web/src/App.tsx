@@ -1,20 +1,25 @@
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router";
 import LoadingState from "./components/LoadingComponents";
-
+import ReportsPage from "./pages/admin/ReportsPage";
+import Report1Page from "./pages/admin/Report1Page";
+import Report2Page from "./pages/admin/Report2Page";
+import Report3Page from "./pages/admin/Report3Page";
 // Lazy load all pages
 const RoleSelectorPage = lazy(() => import("./pages/RoleSelectorPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 // Admin pages
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
-const ReportsPage = lazy(() => import("./pages/admin/ReportsPage"));
-const Report1Page = lazy(() => import("./pages/admin/Report1Page"));
-const Report2Page = lazy(() => import("./pages/admin/Report2Page"));
-const Report3Page = lazy(() => import("./pages/admin/Report3Page"));
+// const ReportsPage = lazy(() => import("./pages/admin/ReportsPage"));
+// const Report1Page = lazy(() => import("./pages/admin/Report1Page"));
+// const Report2Page = lazy(() => import("./pages/admin/Report2Page"));
+// const Report3Page = lazy(() => import("./pages/admin/Report3Page"));
 
 // Player pages
-const PlayerSelectorPage = lazy(() => import("./pages/player/PlayerSelectorPage"));
+const PlayerSelectorPage = lazy(
+  () => import("./pages/player/PlayerSelectorPage")
+);
 const PlayerDashboard = lazy(() => import("./pages/player/PlayerDashboard"));
 const MyStatsPage = lazy(() => import("./pages/player/MyStatsPage"));
 const GamesPage = lazy(() => import("./pages/player/GamesPage"));
