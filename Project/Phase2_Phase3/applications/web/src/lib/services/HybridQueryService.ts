@@ -46,7 +46,8 @@ export class HybridQueryService {
           sessions (
             id,
             player_id,
-            duration
+            start_time,
+            end_time
           ),
           purchases (
             id,
@@ -100,9 +101,19 @@ export class HybridQueryService {
         const totalSessions = sessions.length;
         const uniquePlayers = new Set(sessions.map((s: any) => s.player_id))
           .size;
+
+        // Calculate duration from start_time and end_time
         const totalPlaytimeHours =
-          sessions.reduce((sum: number, s: any) => sum + (s.duration || 0), 0) /
-          3600;
+          sessions.reduce((sum: number, s: any) => {
+            if (s.start_time && s.end_time) {
+              const start = new Date(s.start_time).getTime();
+              const end = new Date(s.end_time).getTime();
+              const durationMs = end - start;
+              return sum + (durationMs / 1000); // Convert to seconds
+            }
+            return sum;
+          }, 0) / 3600;
+
         const totalRevenue = purchases.reduce(
           (sum: number, p: any) => sum + (p.amount || 0),
           0
@@ -183,8 +194,8 @@ export class HybridQueryService {
           ),
           sessions (
             id,
-            duration,
-            session_end
+            start_time,
+            end_time
           ),
           player_achievements (
             id,
@@ -223,9 +234,19 @@ export class HybridQueryService {
         const achievements = player.player_achievements || [];
 
         const totalSessions = sessions.length;
+
+        // Calculate duration from start_time and end_time
         const totalPlaytimeHours =
-          sessions.reduce((sum: number, s: any) => sum + (s.duration || 0), 0) /
-          3600;
+          sessions.reduce((sum: number, s: any) => {
+            if (s.start_time && s.end_time) {
+              const start = new Date(s.start_time).getTime();
+              const end = new Date(s.end_time).getTime();
+              const durationMs = end - start;
+              return sum + (durationMs / 1000); // Convert to seconds
+            }
+            return sum;
+          }, 0) / 3600;
+
         const avgSessionDuration =
           totalSessions > 0 ? totalPlaytimeHours / totalSessions : 0;
         const achievementsUnlocked = achievements.length;
@@ -234,14 +255,14 @@ export class HybridQueryService {
         let daysSinceLastSession = 999;
         if (sessions.length > 0) {
           const lastSession = sessions.reduce((latest: any, s: any) => {
-            const sessionDate = new Date(s.session_end || 0);
-            const latestDate = new Date(latest?.session_end || 0);
+            const sessionDate = new Date(s.end_time || 0);
+            const latestDate = new Date(latest?.end_time || 0);
             return sessionDate > latestDate ? s : latest;
           }, null);
 
-          if (lastSession?.session_end) {
+          if (lastSession?.end_time) {
             const daysDiff = Math.floor(
-              (Date.now() - new Date(lastSession.session_end).getTime()) /
+              (Date.now() - new Date(lastSession.end_time).getTime()) /
                 (1000 * 60 * 60 * 24)
             );
             daysSinceLastSession = daysDiff;
@@ -333,7 +354,8 @@ export class HybridQueryService {
             sessions (
               id,
               player_id,
-              duration
+              start_time,
+              end_time
             )
           )
         `);
@@ -375,7 +397,12 @@ export class HybridQueryService {
           const sessions = game.sessions || [];
           sessions.forEach((s: any) => {
             totalPlayers.add(s.player_id);
-            totalPlaytimeHours += (s.duration || 0) / 3600;
+            if (s.start_time && s.end_time) {
+              const start = new Date(s.start_time).getTime();
+              const end = new Date(s.end_time).getTime();
+              const durationMs = end - start;
+              totalPlaytimeHours += (durationMs / 1000) / 3600; // Convert to hours
+            }
           });
 
           // Ratings

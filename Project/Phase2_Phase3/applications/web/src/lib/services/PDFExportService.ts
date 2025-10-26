@@ -134,27 +134,56 @@ export class PDFExportService {
    * Format cell value for display
    */
   private static formatCellValue(value: any): string {
+    // Handle null and undefined
     if (value === null || value === undefined) {
       return "";
     }
 
+    // Handle arrays - convert to comma-separated string
     if (Array.isArray(value)) {
-      return value.join(", ");
+      return value
+        .map(item => {
+          // For array items, use simpler formatting to avoid infinite recursion
+          if (item === null || item === undefined) return "";
+          if (typeof item === "object") return JSON.stringify(item);
+          if (typeof item === "number") return isNaN(item) ? "NaN" : item.toString();
+          return String(item);
+        })
+        .join(", ");
     }
 
+    // Handle objects - convert to JSON string with error handling
     if (typeof value === "object") {
-      return JSON.stringify(value);
+      try {
+        return JSON.stringify(value);
+      } catch {
+        return "[Object]";
+      }
     }
 
+    // Handle numbers
     if (typeof value === "number") {
+      if (isNaN(value)) return "NaN";
+      if (!isFinite(value)) return "Infinity";
       return Number.isInteger(value) ? value.toString() : value.toFixed(2);
     }
 
+    // Handle booleans
     if (typeof value === "boolean") {
       return value ? "Yes" : "No";
     }
 
-    return String(value);
+    // Handle strings - ensure it's a string
+    if (typeof value === "string") {
+      return value;
+    }
+
+    // Fallback - convert to string safely
+    try {
+      return String(value);
+    } catch {
+      return "[Invalid Value]";
+    }
   }
 
   /**
