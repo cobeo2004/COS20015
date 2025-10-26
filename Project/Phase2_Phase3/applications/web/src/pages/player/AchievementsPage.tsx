@@ -1,10 +1,22 @@
 import { useParams, Link } from "react-router";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RiArrowLeftLine, RiTrophyLine, RiLockLine, RiCheckLine } from "@remixicon/react";
+import {
+  RiArrowLeftLine,
+  RiTrophyLine,
+  RiLockLine,
+  RiCheckLine,
+} from "@remixicon/react";
+import { Check, Lock, Trophy } from "lucide-react";
 
 export default function AchievementsPage() {
   const { playerId } = useParams<{ playerId: string }>();
@@ -65,10 +77,16 @@ export default function AchievementsPage() {
     ],
   };
 
-  const totalAchievements = achievements.unlocked.length + achievements.locked.length;
+  const totalAchievements =
+    achievements.unlocked.length + achievements.locked.length;
   const unlockedCount = achievements.unlocked.length;
-  const completionPercentage = Math.round((unlockedCount / totalAchievements) * 100);
-  const totalPoints = achievements.unlocked.reduce((sum, a) => sum + a.points, 0);
+  const completionPercentage = Math.round(
+    (unlockedCount / totalAchievements) * 100
+  );
+  const totalPoints = achievements.unlocked.reduce(
+    (sum, a) => sum + a.points,
+    0
+  );
 
   const getRarityColor = (rarity: string) => {
     switch (rarity) {
@@ -107,11 +125,15 @@ export default function AchievementsPage() {
         <div className="grid gap-6 md:grid-cols-3 mb-8">
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-medium">Total Points</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Points
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold">{totalPoints}</div>
-              <p className="text-sm text-muted-foreground">Achievement points earned</p>
+              <p className="text-sm text-muted-foreground">
+                Achievement points earned
+              </p>
             </CardContent>
           </Card>
 
@@ -132,7 +154,9 @@ export default function AchievementsPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-medium">Next Milestone</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Next Milestone
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold">25</div>
@@ -146,9 +170,7 @@ export default function AchievementsPage() {
         {/* Achievements List */}
         <Tabs defaultValue="all" className="space-y-6">
           <TabsList>
-            <TabsTrigger value="all">
-              All ({totalAchievements})
-            </TabsTrigger>
+            <TabsTrigger value="all">All ({totalAchievements})</TabsTrigger>
             <TabsTrigger value="unlocked">
               Unlocked ({unlockedCount})
             </TabsTrigger>
@@ -163,7 +185,10 @@ export default function AchievementsPage() {
               <h3 className="text-lg font-semibold mb-4">Unlocked</h3>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {achievements.unlocked.map((achievement) => (
-                  <Card key={achievement.id} className="border-green-200 bg-green-50/50">
+                  <Card
+                    key={achievement.id}
+                    className="border-green-200 bg-green-50/50"
+                  >
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="p-2 rounded-lg bg-green-100">
@@ -171,8 +196,12 @@ export default function AchievementsPage() {
                         </div>
                         <RiCheckLine className="h-5 w-5 text-green-600" />
                       </div>
-                      <CardTitle className="text-lg">{achievement.name}</CardTitle>
-                      <CardDescription>{achievement.description}</CardDescription>
+                      <CardTitle className="text-lg">
+                        {achievement.name}
+                      </CardTitle>
+                      <CardDescription>
+                        {achievement.description}
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between">
@@ -204,15 +233,23 @@ export default function AchievementsPage() {
                           <RiLockLine className="h-5 w-5 text-muted-foreground" />
                         </div>
                       </div>
-                      <CardTitle className="text-lg">{achievement.name}</CardTitle>
-                      <CardDescription>{achievement.description}</CardDescription>
+                      <CardTitle className="text-lg">
+                        {achievement.name}
+                      </CardTitle>
+                      <CardDescription>
+                        {achievement.description}
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-3">
                         <div>
                           <div className="flex justify-between text-sm mb-1">
-                            <span className="text-muted-foreground">Progress</span>
-                            <span className="font-medium">{achievement.progress}%</span>
+                            <span className="text-muted-foreground">
+                              Progress
+                            </span>
+                            <span className="font-medium">
+                              {achievement.progress}%
+                            </span>
                           </div>
                           <Progress value={achievement.progress} />
                         </div>
@@ -235,7 +272,10 @@ export default function AchievementsPage() {
           <TabsContent value="unlocked" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {achievements.unlocked.map((achievement) => (
-                <Card key={achievement.id} className="border-green-200 bg-green-50/50">
+                <Card
+                  key={achievement.id}
+                  className="border-green-200 bg-green-50/50"
+                >
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="p-2 rounded-lg bg-green-100">
@@ -243,7 +283,9 @@ export default function AchievementsPage() {
                       </div>
                       <Check className="h-5 w-5 text-green-600" />
                     </div>
-                    <CardTitle className="text-lg">{achievement.name}</CardTitle>
+                    <CardTitle className="text-lg">
+                      {achievement.name}
+                    </CardTitle>
                     <CardDescription>{achievement.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -274,15 +316,21 @@ export default function AchievementsPage() {
                         <Lock className="h-5 w-5 text-muted-foreground" />
                       </div>
                     </div>
-                    <CardTitle className="text-lg">{achievement.name}</CardTitle>
+                    <CardTitle className="text-lg">
+                      {achievement.name}
+                    </CardTitle>
                     <CardDescription>{achievement.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
                       <div>
                         <div className="flex justify-between text-sm mb-1">
-                          <span className="text-muted-foreground">Progress</span>
-                          <span className="font-medium">{achievement.progress}%</span>
+                          <span className="text-muted-foreground">
+                            Progress
+                          </span>
+                          <span className="font-medium">
+                            {achievement.progress}%
+                          </span>
                         </div>
                         <Progress value={achievement.progress} />
                       </div>
