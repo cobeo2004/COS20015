@@ -57,3 +57,17 @@ CREATE INDEX IF NOT EXISTS idx_purchases_player_date ON "public"."purchases"(pla
 -- JSONB indexes for flexible queries using GIN indexing technique
 CREATE INDEX IF NOT EXISTS idx_player_profiles_settings ON "public"."player_profiles" USING GIN(settings);
 CREATE INDEX IF NOT EXISTS idx_achievements_unlock_criteria ON "public"."achievements" USING GIN(unlock_criteria);
+
+-- Additional JSONB indexes for hybrid data reporting performance
+-- Developers metadata GIN index for company_size, specialties, founded_year queries
+CREATE INDEX IF NOT EXISTS idx_developers_metadata ON "public"."developers" USING GIN(metadata);
+
+-- Games metadata GIN index for ratings, tags, system_requirements queries
+CREATE INDEX IF NOT EXISTS idx_games_metadata ON "public"."games" USING GIN(metadata);
+
+-- JSONB path indexes for specific field queries (PostgreSQL 14+)
+-- Note: These provide targeted indexing for frequently accessed fields
+CREATE INDEX IF NOT EXISTS idx_developers_metadata_company_size ON "public"."developers" USING GIN((metadata->'company_size'));
+CREATE INDEX IF NOT EXISTS idx_developers_metadata_specialties ON "public"."developers" USING GIN((metadata->'specialties'));
+CREATE INDEX IF NOT EXISTS idx_games_metadata_average_rating ON "public"."games" USING GIN((metadata->'average_rating'));
+CREATE INDEX IF NOT EXISTS idx_games_metadata_tags ON "public"."games" USING GIN((metadata->'tags'));
