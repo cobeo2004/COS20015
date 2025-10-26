@@ -431,6 +431,111 @@ export type Database = {
     };
     Functions: {
       clear_database: { Args: never; Returns: undefined };
+      get_developer_success_report: {
+        Args: {
+          p_company_size?: string;
+          p_date_from?: string;
+          p_date_to?: string;
+          p_limit?: number;
+          p_min_founded_year?: number;
+          p_min_revenue?: number;
+          p_offset?: number;
+          p_sort_by?: string;
+          p_sort_direction?: string;
+          p_specialty?: string;
+        };
+        Returns: {
+          active_players_last_30_days: number;
+          avg_game_rating: number;
+          awards_count: number;
+          company_size: string;
+          developer_id: string;
+          developer_name: string;
+          earliest_release_date: string;
+          email: string;
+          founded_year: number;
+          headquarters: string;
+          latest_release_date: string;
+          logo_url: string;
+          revenue_per_game: number;
+          specialties: string[];
+          total_games: number;
+          total_players: number;
+          total_playtime_hours: number;
+          total_revenue: number;
+        }[];
+      };
+      get_game_performance_report: {
+        Args: {
+          p_date_from?: string;
+          p_date_to?: string;
+          p_developer_id?: string;
+          p_genre?: Database["public"]["Enums"]["game_genres"];
+          p_limit?: number;
+          p_min_rating?: number;
+          p_min_revenue?: number;
+          p_offset?: number;
+          p_sort_direction?: string;
+          p_tags?: string[];
+        };
+        Returns: {
+          average_rating: number;
+          avg_session_duration: number;
+          company_size: string;
+          cover_image_url: string;
+          developer_name: string;
+          game_id: string;
+          game_title: string;
+          genre: string;
+          logo_url: string;
+          price: number;
+          release_date: string;
+          revenue_per_player: number;
+          specialties: string[];
+          tags: string[];
+          total_playtime_hours: number;
+          total_revenue: number;
+          total_reviews: number;
+          total_sessions: number;
+          unique_players: number;
+        }[];
+      };
+      get_player_engagement_report: {
+        Args: {
+          p_country?: Database["public"]["Enums"]["countries"];
+          p_date_from?: string;
+          p_date_to?: string;
+          p_limit?: number;
+          p_max_level?: number;
+          p_min_achievements?: number;
+          p_min_level?: number;
+          p_offset?: number;
+          p_privacy_setting?: string;
+          p_sort_by?: string;
+          p_sort_direction?: string;
+          p_theme?: string;
+        };
+        Returns: {
+          account_created: string;
+          achievement_completion_rate: number;
+          achievements_unlocked: number;
+          avatar_url: string;
+          avg_session_duration: number;
+          country: string;
+          days_since_last_session: number;
+          email: string;
+          level: number;
+          notifications_enabled: boolean;
+          player_id: string;
+          privacy: string;
+          retention_score: number;
+          theme: string;
+          total_playtime_hours: number;
+          total_score: number;
+          total_sessions: number;
+          username: string;
+        }[];
+      };
       populate_achievements: { Args: never; Returns: undefined };
       populate_database: { Args: never; Returns: undefined };
       populate_developers: { Args: never; Returns: undefined };
