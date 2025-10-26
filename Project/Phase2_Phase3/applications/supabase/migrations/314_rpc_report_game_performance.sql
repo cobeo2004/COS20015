@@ -10,7 +10,6 @@ CREATE OR REPLACE FUNCTION get_game_performance_report(
   p_min_rating DECIMAL(3,2) DEFAULT NULL,
   p_tags TEXT[] DEFAULT NULL,
   p_min_revenue DECIMAL(10,2) DEFAULT NULL,
-  p_sort_by TEXT DEFAULT 'total_revenue',
   p_sort_direction TEXT DEFAULT 'DESC',
   p_limit INT DEFAULT 100,
   p_offset INT DEFAULT 0
@@ -40,20 +39,7 @@ RETURNS TABLE (
   avg_session_duration DECIMAL(10,2),
   revenue_per_player DECIMAL(10,2)
 ) AS $$
-DECLARE
-  v_sort_clause TEXT;
 BEGIN
-  -- Validate and build sort clause
-  v_sort_clause := CASE
-    WHEN p_sort_by = 'game_title' THEN 'g.title'
-    WHEN p_sort_by = 'total_revenue' THEN 'total_revenue'
-    WHEN p_sort_by = 'total_playtime_hours' THEN 'total_playtime_hours'
-    WHEN p_sort_by = 'unique_players' THEN 'unique_players'
-    WHEN p_sort_by = 'average_rating' THEN 'avg_rating'
-    WHEN p_sort_by = 'release_date' THEN 'g.release_date'
-    ELSE 'total_revenue'
-  END;
-
   IF UPPER(p_sort_direction) NOT IN ('ASC', 'DESC') THEN
     p_sort_direction := 'DESC';
   END IF;
@@ -145,15 +131,8 @@ BEGIN
     -- Revenue filter (applied after calculation)
     (p_min_revenue IS NULL OR total_revenue >= p_min_revenue)
   ORDER BY
-    CASE
-      WHEN v_sort_clause = 'total_revenue' THEN total_revenue
-      WHEN v_sort_clause = 'total_playtime_hours' THEN total_playtime_hours
-      WHEN v_sort_clause = 'unique_players' THEN unique_players
-      WHEN v_sort_clause = 'avg_rating' THEN avg_rating
-      WHEN v_sort_clause = 'g.release_date' THEN release_date
-      ELSE total_revenue
-    END NULLS LAST
-    CASE WHEN UPPER(p_sort_direction) = 'DESC' THEN DESC ELSE ASC END
+    CASE WHEN UPPER(p_sort_direction) = 'DESC' THEN total_revenue END DESC NULLS LAST,
+    CASE WHEN UPPER(p_sort_direction) != 'DESC' THEN total_revenue END ASC NULLS LAST
   LIMIT p_limit OFFSET p_offset;
 END;
 $$ LANGUAGE plpgsql;

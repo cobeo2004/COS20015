@@ -173,15 +173,21 @@ BEGIN
     (p_min_achievements IS NULL OR achievements_unlocked >= p_min_achievements)
   ORDER BY
     CASE
-      WHEN v_sort_clause = 'p.username' THEN username
-      WHEN v_sort_clause = 'p.level' THEN level
-      WHEN v_sort_clause = 'total_playtime_hours' THEN total_playtime_hours
-      WHEN v_sort_clause = 'achievements_unlocked' THEN achievements_unlocked
-      WHEN v_sort_clause = 'retention_score' THEN retention_score
-      WHEN v_sort_clause = 'days_since_last_session' THEN days_since_last_session
-      ELSE retention_score
-    END NULLS LAST
-    CASE WHEN UPPER(p_sort_direction) = 'DESC' THEN DESC ELSE ASC END
+      WHEN UPPER(p_sort_direction) = 'ASC' AND v_sort_clause = 'p.username' THEN username
+      WHEN UPPER(p_sort_direction) = 'ASC' AND v_sort_clause = 'p.level' THEN level
+      WHEN UPPER(p_sort_direction) = 'ASC' AND v_sort_clause = 'total_playtime_hours' THEN total_playtime_hours
+      WHEN UPPER(p_sort_direction) = 'ASC' AND v_sort_clause = 'achievements_unlocked' THEN achievements_unlocked
+      WHEN UPPER(p_sort_direction) = 'ASC' AND v_sort_clause = 'retention_score' THEN retention_score
+      WHEN UPPER(p_sort_direction) = 'ASC' AND v_sort_clause = 'days_since_last_session' THEN days_since_last_session
+    END ASC NULLS LAST,
+    CASE
+      WHEN UPPER(p_sort_direction) = 'DESC' AND v_sort_clause = 'p.username' THEN username
+      WHEN UPPER(p_sort_direction) = 'DESC' AND v_sort_clause = 'p.level' THEN level
+      WHEN UPPER(p_sort_direction) = 'DESC' AND v_sort_clause = 'total_playtime_hours' THEN total_playtime_hours
+      WHEN UPPER(p_sort_direction) = 'DESC' AND v_sort_clause = 'achievements_unlocked' THEN achievements_unlocked
+      WHEN UPPER(p_sort_direction) = 'DESC' AND v_sort_clause = 'retention_score' THEN retention_score
+      WHEN UPPER(p_sort_direction) = 'DESC' AND v_sort_clause = 'days_since_last_session' THEN days_since_last_session
+    END DESC NULLS LAST
   LIMIT p_limit OFFSET p_offset;
 END;
 $$ LANGUAGE plpgsql;

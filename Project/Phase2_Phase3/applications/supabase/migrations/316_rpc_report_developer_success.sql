@@ -162,14 +162,21 @@ BEGIN
     (p_min_revenue IS NULL OR total_revenue >= p_min_revenue)
   ORDER BY
     CASE
-      WHEN v_sort_clause = 'd.name' THEN developer_name
-      WHEN v_sort_clause = 'total_revenue' THEN total_revenue
-      WHEN v_sort_clause = 'total_games' THEN total_games
-      WHEN v_sort_clause = 'avg_game_rating' THEN avg_game_rating
-      WHEN v_sort_clause = 'total_players' THEN total_players
-      ELSE total_revenue
-    END NULLS LAST
-    CASE WHEN UPPER(p_sort_direction) = 'DESC' THEN DESC ELSE ASC END
+      WHEN UPPER(p_sort_direction) = 'ASC' AND v_sort_clause = 'd.name' THEN developer_name
+      WHEN UPPER(p_sort_direction) = 'ASC' AND v_sort_clause = 'total_revenue' THEN total_revenue
+      WHEN UPPER(p_sort_direction) = 'ASC' AND v_sort_clause = 'total_games' THEN total_games
+      WHEN UPPER(p_sort_direction) = 'ASC' AND v_sort_clause = 'avg_game_rating' THEN avg_game_rating
+      WHEN UPPER(p_sort_direction) = 'ASC' AND v_sort_clause = 'total_players' THEN total_players
+      WHEN UPPER(p_sort_direction) = 'ASC' THEN total_revenue
+    END ASC NULLS LAST,
+    CASE
+      WHEN UPPER(p_sort_direction) = 'DESC' AND v_sort_clause = 'd.name' THEN developer_name
+      WHEN UPPER(p_sort_direction) = 'DESC' AND v_sort_clause = 'total_revenue' THEN total_revenue
+      WHEN UPPER(p_sort_direction) = 'DESC' AND v_sort_clause = 'total_games' THEN total_games
+      WHEN UPPER(p_sort_direction) = 'DESC' AND v_sort_clause = 'avg_game_rating' THEN avg_game_rating
+      WHEN UPPER(p_sort_direction) = 'DESC' AND v_sort_clause = 'total_players' THEN total_players
+      WHEN UPPER(p_sort_direction) = 'DESC' THEN total_revenue
+    END DESC NULLS LAST
   LIMIT p_limit OFFSET p_offset;
 END;
 $$ LANGUAGE plpgsql;
