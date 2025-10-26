@@ -1,2 +1,2 @@
-SELECT reset_database();
+SELECT clear_database();
 SELECT populate_database();

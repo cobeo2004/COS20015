@@ -6,6 +6,8 @@ CREATE TABLE IF NOT EXISTS "public"."developers" (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(200) NOT NULL,
   email VARCHAR(255),
+  logo_url VARCHAR(500),
+  metadata JSONB,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
 );

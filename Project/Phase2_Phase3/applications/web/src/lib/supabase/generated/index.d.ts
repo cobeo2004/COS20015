@@ -60,6 +60,8 @@ export type Database = {
           created_at: string | null;
           email: string | null;
           id: string;
+          logo_url: string | null;
+          metadata: Json | null;
           name: string;
           updated_at: string | null;
         };
@@ -67,6 +69,8 @@ export type Database = {
           created_at?: string | null;
           email?: string | null;
           id?: string;
+          logo_url?: string | null;
+          metadata?: Json | null;
           name: string;
           updated_at?: string | null;
         };
@@ -74,6 +78,8 @@ export type Database = {
           created_at?: string | null;
           email?: string | null;
           id?: string;
+          logo_url?: string | null;
+          metadata?: Json | null;
           name?: string;
           updated_at?: string | null;
         };
@@ -81,30 +87,36 @@ export type Database = {
       };
       games: {
         Row: {
+          cover_image_url: string | null;
           created_at: string | null;
           developer_id: string | null;
           genre: Database["public"]["Enums"]["game_genres"] | null;
           id: string;
+          metadata: Json | null;
           price: number | null;
           release_date: string | null;
           title: string;
           updated_at: string | null;
         };
         Insert: {
+          cover_image_url?: string | null;
           created_at?: string | null;
           developer_id?: string | null;
           genre?: Database["public"]["Enums"]["game_genres"] | null;
           id?: string;
+          metadata?: Json | null;
           price?: number | null;
           release_date?: string | null;
           title: string;
           updated_at?: string | null;
         };
         Update: {
+          cover_image_url?: string | null;
           created_at?: string | null;
           developer_id?: string | null;
           genre?: Database["public"]["Enums"]["game_genres"] | null;
           id?: string;
+          metadata?: Json | null;
           price?: number | null;
           release_date?: string | null;
           title?: string;

@@ -8,8 +8,9 @@ CREATE TABLE IF NOT EXISTS "public"."games" (
   genre game_genres,
   release_date TIMESTAMPTZ,
   price NUMERIC(10, 2),
-  developer_id UUID REFERENCES developers(id) ON DELETE
-  SET NULL,
-    created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now()
+  developer_id UUID REFERENCES developers(id) ON DELETE SET NULL,
+  cover_image_url VARCHAR(500),
+  metadata JSONB,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
 );

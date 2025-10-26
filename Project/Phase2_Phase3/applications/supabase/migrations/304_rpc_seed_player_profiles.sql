@@ -21,7 +21,7 @@ VALUES (
             WHEN 3 THEN 'casual puzzles'
             WHEN 4 THEN 'sports simulation'
         END,
-        'https://avatar.example.com/' || md5(player_record.id::text) || '.png',
+        'https://i.pravatar.cc/150?u=' || player_record.id::text,
         jsonb_build_object(
             'notifications',
             random() > 0.5,
