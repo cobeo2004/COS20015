@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BarChart3, Users, Gamepad2, TrendingUp, FileText, DollarSign } from "lucide-react";
+import { RiBarChartBoxLine, RiGroupLine, RiGamepadLine, RiLineChartLine, RiFileTextLine, RiMoneyDollarCircleLine } from "@remixicon/react";
 
 export default function AdminDashboard() {
   // TODO: Replace with real data from database in Phase 4
@@ -11,7 +11,7 @@ export default function AdminDashboard() {
       value: "1,234",
       change: "+12%",
       trend: "up",
-      icon: Users,
+      icon: RiGroupLine,
       color: "text-blue-600",
       bgColor: "bg-blue-100",
     },
@@ -20,7 +20,7 @@ export default function AdminDashboard() {
       value: "48",
       change: "+3",
       trend: "up",
-      icon: Gamepad2,
+      icon: RiGamepadLine,
       color: "text-purple-600",
       bgColor: "bg-purple-100",
     },
@@ -29,7 +29,7 @@ export default function AdminDashboard() {
       value: "$45,678",
       change: "+23%",
       trend: "up",
-      icon: DollarSign,
+      icon: RiMoneyDollarCircleLine,
       color: "text-green-600",
       bgColor: "bg-green-100",
     },
@@ -38,7 +38,7 @@ export default function AdminDashboard() {
       value: "78.5%",
       change: "+5.2%",
       trend: "up",
-      icon: TrendingUp,
+      icon: RiLineChartLine,
       color: "text-orange-600",
       bgColor: "bg-orange-100",
     },
@@ -108,7 +108,7 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5" />
+                <RiBarChartBoxLine className="h-5 w-5" />
                 Quick Reports
               </CardTitle>
               <CardDescription>
@@ -127,7 +127,7 @@ export default function AdminDashboard() {
                       Revenue, playtime, and player engagement
                     </p>
                   </div>
-                  <FileText className="h-5 w-5 text-muted-foreground" />
+                  <RiFileTextLine className="h-5 w-5 text-muted-foreground" />
                 </div>
               </Link>
 
@@ -142,7 +142,7 @@ export default function AdminDashboard() {
                       Session duration, retention, and activity
                     </p>
                   </div>
-                  <FileText className="h-5 w-5 text-muted-foreground" />
+                  <RiFileTextLine className="h-5 w-5 text-muted-foreground" />
                 </div>
               </Link>
 
@@ -157,7 +157,7 @@ export default function AdminDashboard() {
                       Studio performance and game statistics
                     </p>
                   </div>
-                  <FileText className="h-5 w-5 text-muted-foreground" />
+                  <RiFileTextLine className="h-5 w-5 text-muted-foreground" />
                 </div>
               </Link>
 

@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Building2, Download, Filter } from "lucide-react";
+import { RiArrowLeftLine, RiBuilding2Line, RiDownloadLine, RiFilter3Line } from "@remixicon/react";
 
 export default function Report3Page() {
   return (
@@ -12,7 +12,7 @@ export default function Report3Page() {
         <div className="container mx-auto px-6 py-8">
           <Link to="/admin/reports">
             <Button variant="ghost" size="sm" className="mb-4">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+              <RiArrowLeftLine className="h-4 w-4 mr-2" />
               Back to Reports
             </Button>
           </Link>
@@ -28,15 +28,15 @@ export default function Report3Page() {
             </div>
             <div className="flex gap-2">
               <Button variant="outline">
-                <Filter className="h-4 w-4 mr-2" />
+                <RiFilter3Line className="h-4 w-4 mr-2" />
                 Filters
               </Button>
               <Button variant="outline" disabled>
-                <Download className="h-4 w-4 mr-2" />
+                <RiDownloadLine className="h-4 w-4 mr-2" />
                 Export CSV
               </Button>
               <Button variant="outline" disabled>
-                <Download className="h-4 w-4 mr-2" />
+                <RiDownloadLine className="h-4 w-4 mr-2" />
                 Export PDF
               </Button>
             </div>
@@ -49,7 +49,7 @@ export default function Report3Page() {
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Building2 className="h-5 w-5" />
+              <RiBuilding2Line className="h-5 w-5" />
               Report Details
             </CardTitle>
             <CardDescription>
@@ -98,7 +98,7 @@ export default function Report3Page() {
         <Card>
           <CardContent className="py-12">
             <div className="text-center text-muted-foreground">
-              <Building2 className="h-16 w-16 mx-auto mb-4 opacity-50" />
+              <RiBuilding2Line className="h-16 w-16 mx-auto mb-4 opacity-50" />
               <p className="text-lg font-medium mb-2">Report Implementation Pending</p>
               <p className="text-sm">
                 This report will be fully implemented in Phase 4 with real-time data,

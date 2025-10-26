@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, User, Star } from "lucide-react";
+import { RiArrowLeftLine, RiUserLine, RiStarFill } from "@remixicon/react";
 
 export default function PlayerSelectorPage() {
   // TODO: Replace with real data from database
@@ -23,7 +23,7 @@ export default function PlayerSelectorPage() {
         <div className="container mx-auto px-6 py-8">
           <Link to="/">
             <Button variant="ghost" size="sm" className="mb-4">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+              <RiArrowLeftLine className="h-4 w-4 mr-2" />
               Back to Role Selection
             </Button>
           </Link>
@@ -71,7 +71,7 @@ export default function PlayerSelectorPage() {
                   <div className="space-y-3">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground flex items-center gap-1">
-                        <Star className="h-3 w-3" />
+                        <RiStarFill className="h-3 w-3" />
                         Total Score
                       </span>
                       <span className="font-semibold">
@@ -80,7 +80,7 @@ export default function PlayerSelectorPage() {
                     </div>
                     <div className="pt-2">
                       <Button className="w-full" variant="outline">
-                        <User className="h-4 w-4 mr-2" />
+                        <RiUserLine className="h-4 w-4 mr-2" />
                         View Dashboard
                       </Button>
                     </div>

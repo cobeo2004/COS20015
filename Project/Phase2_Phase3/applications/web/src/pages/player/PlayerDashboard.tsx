@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
-import { Trophy, Gamepad2, Clock, TrendingUp, Star } from "lucide-react";
+import { RiTrophyLine, RiGamepadLine, RiTimeLine, RiLineChartLine, RiStarFill } from "@remixicon/react";
 
 export default function PlayerDashboard() {
   const { playerId } = useParams<{ playerId: string }>();
@@ -23,28 +23,28 @@ export default function PlayerDashboard() {
     {
       title: "Total Score",
       value: playerData.total_score.toLocaleString(),
-      icon: Star,
+      icon: RiStarFill,
       color: "text-yellow-600",
       bgColor: "bg-yellow-100",
     },
     {
       title: "Current Level",
       value: playerData.level,
-      icon: TrendingUp,
+      icon: RiLineChartLine,
       color: "text-blue-600",
       bgColor: "bg-blue-100",
     },
     {
       title: "Games Played",
       value: "12",
-      icon: Gamepad2,
+      icon: RiGamepadLine,
       color: "text-purple-600",
       bgColor: "bg-purple-100",
     },
     {
       title: "Total Playtime",
       value: "48h",
-      icon: Clock,
+      icon: RiTimeLine,
       color: "text-green-600",
       bgColor: "bg-green-100",
     },
@@ -135,7 +135,7 @@ export default function PlayerDashboard() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Trophy className="h-5 w-5" />
+                <RiTrophyLine className="h-5 w-5" />
                 Recent Achievements
               </CardTitle>
               <CardDescription>Your latest unlocked achievements</CardDescription>
@@ -148,7 +148,7 @@ export default function PlayerDashboard() {
                     className="flex items-start gap-3 pb-4 border-b last:border-0 last:pb-0"
                   >
                     <div className="p-2 rounded-lg bg-yellow-100">
-                      <Trophy className="h-4 w-4 text-yellow-600" />
+                      <RiTrophyLine className="h-4 w-4 text-yellow-600" />
                     </div>
                     <div className="flex-1">
                       <p className="font-medium">{achievement.name}</p>
@@ -175,7 +175,7 @@ export default function PlayerDashboard() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Gamepad2 className="h-5 w-5" />
+                <RiGamepadLine className="h-5 w-5" />
                 Recently Played
               </CardTitle>
               <CardDescription>Your gaming activity</CardDescription>

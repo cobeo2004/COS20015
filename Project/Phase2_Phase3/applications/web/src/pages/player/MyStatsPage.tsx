@@ -2,7 +2,7 @@ import { useParams, Link } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, TrendingUp, Clock, Target } from "lucide-react";
+import { RiArrowLeftLine, RiLineChartLine, RiTimeLine, RiTargetLine } from "@remixicon/react";
 
 export default function MyStatsPage() {
   const { playerId } = useParams<{ playerId: string }>();
@@ -14,7 +14,7 @@ export default function MyStatsPage() {
         <div className="container mx-auto px-6 py-8">
           <Link to={`/player/${playerId}`}>
             <Button variant="ghost" size="sm" className="mb-4">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+              <RiArrowLeftLine className="h-4 w-4 mr-2" />
               Back to Dashboard
             </Button>
           </Link>
@@ -39,7 +39,7 @@ export default function MyStatsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5" />
+                    <RiLineChartLine className="h-5 w-5" />
                     Performance Overview
                   </CardTitle>
                   <CardDescription>Your gaming statistics at a glance</CardDescription>
@@ -67,7 +67,7 @@ export default function MyStatsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Clock className="h-5 w-5" />
+                    <RiTimeLine className="h-5 w-5" />
                     Time Statistics
                   </CardTitle>
                   <CardDescription>Your playtime breakdown</CardDescription>
@@ -102,7 +102,7 @@ export default function MyStatsPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-center py-12 text-muted-foreground">
-                  <Clock className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                  <RiTimeLine className="h-16 w-16 mx-auto mb-4 opacity-50" />
                   <p className="text-lg font-medium mb-2">Session History Coming Soon</p>
                   <p className="text-sm">
                     Detailed session history will be implemented with database integration
@@ -120,7 +120,7 @@ export default function MyStatsPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-center py-12 text-muted-foreground">
-                  <Target className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                  <RiTargetLine className="h-16 w-16 mx-auto mb-4 opacity-50" />
                   <p className="text-lg font-medium mb-2">Performance Analytics Coming Soon</p>
                   <p className="text-sm">
                     Advanced performance tracking will be implemented with database integration

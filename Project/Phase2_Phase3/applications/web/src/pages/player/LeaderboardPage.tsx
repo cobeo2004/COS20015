@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, Trophy, Medal, Crown } from "lucide-react";
+import { RiArrowLeftLine, RiTrophyLine, RiMedalLine, RiVipCrownLine } from "@remixicon/react";
 
 export default function LeaderboardPage() {
   const { playerId } = useParams<{ playerId: string }>();
@@ -24,11 +24,11 @@ export default function LeaderboardPage() {
   const getRankIcon = (rank: number) => {
     switch (rank) {
       case 1:
-        return <Crown className="h-5 w-5 text-yellow-500" />;
+        return <RiVipCrownLine className="h-5 w-5 text-yellow-500" />;
       case 2:
-        return <Medal className="h-5 w-5 text-gray-400" />;
+        return <RiMedalLine className="h-5 w-5 text-gray-400" />;
       case 3:
-        return <Medal className="h-5 w-5 text-orange-600" />;
+        return <RiMedalLine className="h-5 w-5 text-orange-600" />;
       default:
         return null;
     }
@@ -41,14 +41,14 @@ export default function LeaderboardPage() {
         <div className="container mx-auto px-6 py-8">
           <Link to={`/player/${playerId}`}>
             <Button variant="ghost" size="sm" className="mb-4">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+              <RiArrowLeftLine className="h-4 w-4 mr-2" />
               Back to Dashboard
             </Button>
           </Link>
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold mb-2 flex items-center gap-3">
-                <Trophy className="h-10 w-10 text-yellow-500" />
+                <RiTrophyLine className="h-10 w-10 text-yellow-500" />
                 Leaderboard
               </h1>
               <p className="text-muted-foreground">

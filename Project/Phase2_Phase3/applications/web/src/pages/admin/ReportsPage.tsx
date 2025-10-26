@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, BarChart3, Users, Building2, Download } from "lucide-react";
+import { RiArrowLeftLine, RiBarChartBoxLine, RiGroupLine, RiBuilding2Line, RiDownloadLine } from "@remixicon/react";
 
 export default function ReportsPage() {
   const reports = [
@@ -10,7 +10,7 @@ export default function ReportsPage() {
       id: 1,
       title: "Game Performance Analytics",
       description: "Comprehensive analysis of game revenue, playtime, player engagement, and ratings across all titles",
-      icon: BarChart3,
+      icon: RiBarChartBoxLine,
       color: "text-blue-600",
       bgColor: "bg-blue-100",
       metrics: ["Revenue Trends", "Active Players", "Average Rating", "Total Playtime"],
@@ -20,7 +20,7 @@ export default function ReportsPage() {
       id: 2,
       title: "Player Engagement Analysis",
       description: "Detailed insights into player behavior, session duration, achievement completion, and retention rates",
-      icon: Users,
+      icon: RiGroupLine,
       color: "text-purple-600",
       bgColor: "bg-purple-100",
       metrics: ["Session Duration", "Achievement Rate", "Retention", "Engagement Score"],
@@ -30,7 +30,7 @@ export default function ReportsPage() {
       id: 3,
       title: "Developer Success Dashboard",
       description: "Studio performance metrics including total games, revenue, average ratings, and player base",
-      icon: Building2,
+      icon: RiBuilding2Line,
       color: "text-green-600",
       bgColor: "bg-green-100",
       metrics: ["Total Games", "Total Revenue", "Avg Game Rating", "Active Users"],
@@ -45,7 +45,7 @@ export default function ReportsPage() {
         <div className="container mx-auto px-6 py-8">
           <Link to="/admin">
             <Button variant="ghost" size="sm" className="mb-4">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+              <RiArrowLeftLine className="h-4 w-4 mr-2" />
               Back to Dashboard
             </Button>
           </Link>
@@ -115,12 +115,12 @@ export default function ReportsPage() {
                     <div className="flex gap-3 pt-2">
                       <Link to={`/admin/reports/${report.id}`} className="flex-1">
                         <Button className="w-full">
-                          <BarChart3 className="h-4 w-4 mr-2" />
+                          <RiBarChartBoxLine className="h-4 w-4 mr-2" />
                           View Report
                         </Button>
                       </Link>
                       <Button variant="outline" disabled>
-                        <Download className="h-4 w-4 mr-2" />
+                        <RiDownloadLine className="h-4 w-4 mr-2" />
                         Export
                       </Button>
                     </div>

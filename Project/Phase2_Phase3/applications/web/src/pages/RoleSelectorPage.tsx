@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Shield, Gamepad2, ArrowRight } from "lucide-react";
+import { RiShieldLine, RiGamepadLine, RiArrowRightLine } from "@remixicon/react";
 
 export default function RoleSelectorPage() {
   return (
@@ -18,7 +18,7 @@ export default function RoleSelectorPage() {
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center gap-8 px-8 text-white">
           <div className="rounded-full bg-white/10 p-8 backdrop-blur-sm ring-2 ring-white/20 transition-all duration-500 group-hover:scale-110 group-hover:bg-white/20">
-            <Shield className="h-24 w-24" strokeWidth={1.5} />
+            <RiShieldLine className="h-24 w-24" strokeWidth={1.5} />
           </div>
 
           <div className="text-center">
@@ -31,7 +31,7 @@ export default function RoleSelectorPage() {
 
             <div className="inline-flex items-center gap-2 text-lg font-medium opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
               <span>Access Dashboard</span>
-              <ArrowRight className="h-5 w-5" />
+              <RiArrowRightLine className="h-5 w-5" />
             </div>
           </div>
         </div>
@@ -61,7 +61,7 @@ export default function RoleSelectorPage() {
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center gap-8 px-8 text-white">
           <div className="rounded-full bg-white/10 p-8 backdrop-blur-sm ring-2 ring-white/20 transition-all duration-500 group-hover:scale-110 group-hover:bg-white/20">
-            <Gamepad2 className="h-24 w-24" strokeWidth={1.5} />
+            <RiGamepadLine className="h-24 w-24" strokeWidth={1.5} />
           </div>
 
           <div className="text-center">
@@ -74,7 +74,7 @@ export default function RoleSelectorPage() {
 
             <div className="inline-flex items-center gap-2 text-lg font-medium opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
               <span>Enter Game Hub</span>
-              <ArrowRight className="h-5 w-5" />
+              <RiArrowRightLine className="h-5 w-5" />
             </div>
           </div>
         </div>

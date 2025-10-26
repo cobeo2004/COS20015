@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Trophy, Lock, Check } from "lucide-react";
+import { RiArrowLeftLine, RiTrophyLine, RiLockLine, RiCheckLine } from "@remixicon/react";
 
 export default function AchievementsPage() {
   const { playerId } = useParams<{ playerId: string }>();
@@ -90,7 +90,7 @@ export default function AchievementsPage() {
         <div className="container mx-auto px-6 py-8">
           <Link to={`/player/${playerId}`}>
             <Button variant="ghost" size="sm" className="mb-4">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+              <RiArrowLeftLine className="h-4 w-4 mr-2" />
               Back to Dashboard
             </Button>
           </Link>
@@ -167,9 +167,9 @@ export default function AchievementsPage() {
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="p-2 rounded-lg bg-green-100">
-                          <Trophy className="h-5 w-5 text-green-600" />
+                          <RiTrophyLine className="h-5 w-5 text-green-600" />
                         </div>
-                        <Check className="h-5 w-5 text-green-600" />
+                        <RiCheckLine className="h-5 w-5 text-green-600" />
                       </div>
                       <CardTitle className="text-lg">{achievement.name}</CardTitle>
                       <CardDescription>{achievement.description}</CardDescription>
@@ -201,7 +201,7 @@ export default function AchievementsPage() {
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="p-2 rounded-lg bg-muted">
-                          <Lock className="h-5 w-5 text-muted-foreground" />
+                          <RiLockLine className="h-5 w-5 text-muted-foreground" />
                         </div>
                       </div>
                       <CardTitle className="text-lg">{achievement.name}</CardTitle>

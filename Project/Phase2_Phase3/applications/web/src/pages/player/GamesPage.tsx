@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Search, Filter, Gamepad2, Star } from "lucide-react";
+import { RiArrowLeftLine, RiSearchLine, RiFilter3Line, RiGamepadLine, RiStarFill } from "@remixicon/react";
 
 export default function GamesPage() {
   const { playerId } = useParams<{ playerId: string }>();
@@ -51,7 +51,7 @@ export default function GamesPage() {
         <div className="container mx-auto px-6 py-8">
           <Link to={`/player/${playerId}`}>
             <Button variant="ghost" size="sm" className="mb-4">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+              <RiArrowLeftLine className="h-4 w-4 mr-2" />
               Back to Dashboard
             </Button>
           </Link>
@@ -67,14 +67,14 @@ export default function GamesPage() {
         {/* Search and Filters */}
         <div className="flex gap-4 mb-8">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <RiSearchLine className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search games..."
               className="pl-10"
             />
           </div>
           <Button variant="outline">
-            <Filter className="h-4 w-4 mr-2" />
+            <RiFilter3Line className="h-4 w-4 mr-2" />
             Filters
           </Button>
         </div>
@@ -84,14 +84,14 @@ export default function GamesPage() {
           {games.map((game) => (
             <Card key={game.id} className="overflow-hidden hover:shadow-lg transition-shadow">
               <div className="aspect-video bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                <Gamepad2 className="h-16 w-16 text-white/50" />
+                <RiGamepadLine className="h-16 w-16 text-white/50" />
               </div>
               <CardHeader>
                 <CardTitle className="line-clamp-1">{game.title}</CardTitle>
                 <CardDescription className="flex items-center justify-between">
                   <Badge variant="secondary">{game.genre}</Badge>
                   <div className="flex items-center gap-1">
-                    <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
+                    <RiStarFill className="h-3 w-3 fill-yellow-500 text-yellow-500" />
                     <span className="text-sm font-medium">{game.rating}</span>
                   </div>
                 </CardDescription>
@@ -111,7 +111,7 @@ export default function GamesPage() {
           <Card>
             <CardContent className="py-12">
               <div className="text-center text-muted-foreground">
-                <Gamepad2 className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                <RiGamepadLine className="h-16 w-16 mx-auto mb-4 opacity-50" />
                 <p className="text-lg font-medium mb-2">No games found</p>
                 <p className="text-sm">
                   Try adjusting your search or filters
