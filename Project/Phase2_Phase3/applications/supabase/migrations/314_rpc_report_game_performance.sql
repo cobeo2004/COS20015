@@ -1,4 +1,5 @@
--- Report 1: Game Performance Analytics
+-- Fixed Report 1: Game Performance Analytics
+-- Fixes duration calculation by using start_time and end_time instead of non-existent duration column
 -- Combines structured data (tables), semi-structured data (JSONB), and unstructured data (image URLs)
 -- Joins: games + sessions + purchases + developers
 
@@ -65,13 +66,25 @@ BEGIN
       d.metadata->>'company_size' AS company_size,
       d.metadata->'specialties' AS specialties,
 
-      -- Calculate session metrics
+      -- Calculate session metrics using start_time and end_time
       COUNT(DISTINCT s.id) AS total_sessions,
       COUNT(DISTINCT s.player_id) AS unique_players,
-      COALESCE(SUM(s.duration), 0) / 3600.0 AS total_playtime_hours,
+      COALESCE(SUM(
+        CASE
+          WHEN s.start_time IS NOT NULL AND s.end_time IS NOT NULL
+          THEN EXTRACT(EPOCH FROM (s.end_time::timestamp - s.start_time::timestamp))
+          ELSE 0
+        END
+      ), 0) / 3600.0 AS total_playtime_hours,
       CASE
         WHEN COUNT(s.id) > 0
-        THEN COALESCE(SUM(s.duration), 0) / 3600.0 / COUNT(s.id)
+        THEN COALESCE(SUM(
+          CASE
+            WHEN s.start_time IS NOT NULL AND s.end_time IS NOT NULL
+            THEN EXTRACT(EPOCH FROM (s.end_time::timestamp - s.start_time::timestamp))
+            ELSE 0
+          END
+        ), 0) / 3600.0 / COUNT(s.id)
         ELSE 0
       END AS avg_session_duration,
 
@@ -138,4 +151,4 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Add comment for documentation
-COMMENT ON FUNCTION get_game_performance_report IS 'Report 1: Game Performance Analytics - Combines games, sessions, purchases, and developers with JSONB metadata and image URLs. Supports filtering by date range, genre, developer, rating, and tags with sorting options.';
+COMMENT ON FUNCTION get_game_performance_report IS 'Report 1: Game Performance Analytics - Combines games, sessions, purchases, and developers with JSONB metadata and image URLs. Supports filtering by date range, genre, developer, rating, and tags with sorting options. Fixed duration calculation using start_time and end_time.';
