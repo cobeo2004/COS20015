@@ -1,11 +1,21 @@
-import React, { useState, useCallback } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { RiFilter3Line, RiCloseLine, RiArrowDownSLine, RiArrowUpSLine } from "@remixicon/react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  RiFilter3Line,
+  RiCloseLine,
+  RiArrowDownSLine,
+  RiArrowUpSLine,
+} from "@remixicon/react";
 
 // Filter types
 export interface DateRangeFilter {
@@ -35,7 +45,13 @@ export interface TextFilter {
 export interface FilterConfig {
   key: string;
   label: string;
-  type: "dateRange" | "select" | "multiSelect" | "numberRange" | "text" | "search";
+  type:
+    | "dateRange"
+    | "select"
+    | "multiSelect"
+    | "numberRange"
+    | "text"
+    | "search";
   options?: SelectFilter[];
   placeholder?: string;
   min?: number;
@@ -70,7 +86,9 @@ export function ReportFilters({
   onToggleVisibility,
   className,
 }: ReportFiltersProps) {
-  const [debounceTimers, setDebounceTimers] = useState<Record<string, NodeJS.Timeout>>({});
+  const [debounceTimers, setDebounceTimers] = useState<
+    Record<string, NodeJS.Timeout>
+  >({});
 
   // Debounced filter change handler
   const debouncedFilterChange = useCallback(
@@ -88,7 +106,7 @@ export function ReportFilters({
         });
       }, debounceMs);
 
-      setDebounceTimers(prev => ({
+      setDebounceTimers((prev) => ({
         ...prev,
         [key]: timer,
       }));
@@ -131,11 +149,14 @@ export function ReportFilters({
 
     switch (config.type) {
       case "dateRange": {
-        const dateRange = value as DateRangeFilter || { from: "", to: "" };
+        const dateRange = (value as DateRangeFilter) || { from: "", to: "" };
         return (
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <Label htmlFor={`${config.key}-from`} className="text-xs text-muted-foreground">
+              <Label
+                htmlFor={`${config.key}-from`}
+                className="text-xs text-muted-foreground"
+              >
                 From
               </Label>
               <Input
@@ -152,7 +173,10 @@ export function ReportFilters({
               />
             </div>
             <div>
-              <Label htmlFor={`${config.key}-to`} className="text-xs text-muted-foreground">
+              <Label
+                htmlFor={`${config.key}-to`}
+                className="text-xs text-muted-foreground"
+              >
                 To
               </Label>
               <Input
@@ -176,7 +200,9 @@ export function ReportFilters({
         return (
           <select
             value={value || ""}
-            onChange={(e) => immediateFilterChange(config.key, e.target.value || undefined)}
+            onChange={(e) =>
+              immediateFilterChange(config.key, e.target.value || undefined)
+            }
             className="w-full h-8 px-3 py-1 text-sm border border-input bg-background rounded-md ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
           >
             <option value="">All {config.label}</option>
@@ -189,12 +215,17 @@ export function ReportFilters({
         );
 
       case "multiSelect": {
-        const multiSelect = value as MultiSelectFilter || { values: [], options: config.options || [] };
+        const multiSelect = (value as MultiSelectFilter) || {
+          values: [],
+          options: config.options || [],
+        };
         return (
           <div className="space-y-2">
             <div className="flex flex-wrap gap-1 min-h-6">
               {multiSelect.values.map((selectedValue) => {
-                const option = config.options?.find((opt) => opt.value === selectedValue);
+                const option = config.options?.find(
+                  (opt) => opt.value === selectedValue
+                );
                 return (
                   <Badge
                     key={selectedValue}
@@ -207,7 +238,9 @@ export function ReportFilters({
                       size="sm"
                       className="h-auto p-0 ml-1 text-muted-foreground hover:text-foreground"
                       onClick={() => {
-                        const newValues = multiSelect.values.filter((v) => v !== selectedValue);
+                        const newValues = multiSelect.values.filter(
+                          (v) => v !== selectedValue
+                        );
                         immediateFilterChange(config.key, {
                           ...multiSelect,
                           values: newValues,
@@ -222,7 +255,10 @@ export function ReportFilters({
             </div>
             <select
               onChange={(e) => {
-                if (e.target.value && !multiSelect.values.includes(e.target.value)) {
+                if (
+                  e.target.value &&
+                  !multiSelect.values.includes(e.target.value)
+                ) {
                   immediateFilterChange(config.key, {
                     ...multiSelect,
                     values: [...multiSelect.values, e.target.value],
@@ -246,11 +282,17 @@ export function ReportFilters({
       }
 
       case "numberRange": {
-        const numberRange = value as NumberRangeFilter || { min: config.min || 0, max: config.max || 100 };
+        const numberRange = (value as NumberRangeFilter) || {
+          min: config.min || 0,
+          max: config.max || 100,
+        };
         return (
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <Label htmlFor={`${config.key}-min`} className="text-xs text-muted-foreground">
+              <Label
+                htmlFor={`${config.key}-min`}
+                className="text-xs text-muted-foreground"
+              >
                 Min
               </Label>
               <Input
@@ -269,7 +311,10 @@ export function ReportFilters({
               />
             </div>
             <div>
-              <Label htmlFor={`${config.key}-max`} className="text-xs text-muted-foreground">
+              <Label
+                htmlFor={`${config.key}-max`}
+                className="text-xs text-muted-foreground"
+              >
                 Max
               </Label>
               <Input
@@ -296,8 +341,12 @@ export function ReportFilters({
           <Input
             type="text"
             value={value || ""}
-            onChange={(e) => debouncedFilterChange(config.key, e.target.value || undefined)}
-            placeholder={config.placeholder || `Search ${config.label.toLowerCase()}...`}
+            onChange={(e) =>
+              debouncedFilterChange(config.key, e.target.value || undefined)
+            }
+            placeholder={
+              config.placeholder || `Search ${config.label.toLowerCase()}...`
+            }
             className="h-8"
           />
         );
@@ -307,8 +356,12 @@ export function ReportFilters({
           <Input
             type="text"
             value={value || ""}
-            onChange={(e) => debouncedFilterChange(config.key, e.target.value || undefined)}
-            placeholder={config.placeholder || `Search ${config.label.toLowerCase()}...`}
+            onChange={(e) =>
+              debouncedFilterChange(config.key, e.target.value || undefined)
+            }
+            placeholder={
+              config.placeholder || `Search ${config.label.toLowerCase()}...`
+            }
             className="h-8"
           />
         );
@@ -364,7 +417,9 @@ export function ReportFilters({
                 {filterConfigs.map((config) => (
                   <div key={config.key} className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <Label className="text-sm font-medium">{config.label}</Label>
+                      <Label className="text-sm font-medium">
+                        {config.label}
+                      </Label>
                       {filters[config.key] && (
                         <Button
                           variant="ghost"

@@ -4,7 +4,7 @@ export class PlayersRepository {
   static async getAllPlayers() {
     const { data, error } = await supabase
       .from("players")
-      .select("*")
+      .select("*, player_profiles (*)")
       .order("total_score", { ascending: false });
 
     if (error) {
@@ -29,10 +29,12 @@ export class PlayersRepository {
   static async getPlayerWithProfile(playerId: string) {
     const { data, error } = await supabase
       .from("players")
-      .select(`
+      .select(
+        `
         *,
         player_profiles (*)
-      `)
+      `
+      )
       .eq("id", playerId)
       .single();
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import {
   LineChart,
@@ -11,8 +12,6 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
-  Legend,
   ResponsiveContainer,
   Cell,
 } from "recharts";
@@ -87,8 +86,16 @@ export interface ReportChartProps {
 
 // Default colors for charts
 const DEFAULT_COLORS = [
-  "#8884d8", "#82ca9d", "#ffc658", "#ff7c7c", "#8dd1e1",
-  "#d084d0", "#ffb347", "#67b7dc", "#ff6b6b", "#4ecdc4"
+  "#8884d8",
+  "#82ca9d",
+  "#ffc658",
+  "#ff7c7c",
+  "#8dd1e1",
+  "#d084d0",
+  "#ffb347",
+  "#67b7dc",
+  "#ff6b6b",
+  "#4ecdc4",
 ];
 
 /**
@@ -102,13 +109,11 @@ export function ReportChart({
   series,
   title,
   height = 300,
-  aspect,
   showLegend = true,
   showGrid = true,
   showTooltip = true,
   xAxisDataKey,
   yAxisLabel,
-  xAxisLabel,
   isLoading = false,
   error = null,
   emptyMessage = "No data available",
@@ -197,7 +202,9 @@ export function ReportChart({
       case "line":
         return (
           <LineChart data={chartData}>
-            {showGrid && <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />}
+            {showGrid && (
+              <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+            )}
             {xAxisDataKey && (
               <XAxis
                 dataKey={xAxisDataKey}
@@ -206,12 +213,20 @@ export function ReportChart({
               />
             )}
             <YAxis
-              label={yAxisLabel ? { value: yAxisLabel, angle: -90, position: "insideLeft" } : undefined}
+              label={
+                yAxisLabel
+                  ? { value: yAxisLabel, angle: -90, position: "insideLeft" }
+                  : undefined
+              }
               tick={{ fill: "hsl(var(--muted-foreground))" }}
               tickLine={{ stroke: "hsl(var(--border))" }}
             />
             {showTooltip && (
-              <ChartTooltip content={<ChartTooltipContent formatter={tooltipFormatter} />} />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent formatter={tooltipFormatter as any} />
+                }
+              />
             )}
             {showLegend && <ChartLegend content={<ChartLegendContent />} />}
             {series.map((s, index) => (
@@ -219,7 +234,9 @@ export function ReportChart({
                 key={s.dataKey}
                 type="monotone"
                 dataKey={s.dataKey}
-                stroke={s.color || DEFAULT_COLORS[index % DEFAULT_COLORS.length]}
+                stroke={
+                  s.color || DEFAULT_COLORS[index % DEFAULT_COLORS.length]
+                }
                 strokeWidth={2}
                 dot={{ r: 4 }}
                 activeDot={{ r: 6 }}
@@ -232,7 +249,9 @@ export function ReportChart({
       case "bar":
         return (
           <BarChart data={chartData}>
-            {showGrid && <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />}
+            {showGrid && (
+              <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+            )}
             {xAxisDataKey && (
               <XAxis
                 dataKey={xAxisDataKey}
@@ -241,12 +260,20 @@ export function ReportChart({
               />
             )}
             <YAxis
-              label={yAxisLabel ? { value: yAxisLabel, angle: -90, position: "insideLeft" } : undefined}
+              label={
+                yAxisLabel
+                  ? { value: yAxisLabel, angle: -90, position: "insideLeft" }
+                  : undefined
+              }
               tick={{ fill: "hsl(var(--muted-foreground))" }}
               tickLine={{ stroke: "hsl(var(--border))" }}
             />
             {showTooltip && (
-              <ChartTooltip content={<ChartTooltipContent formatter={tooltipFormatter} />} />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent formatter={tooltipFormatter as any} />
+                }
+              />
             )}
             {showLegend && <ChartLegend content={<ChartLegendContent />} />}
             {series.map((s, index) => (
@@ -272,9 +299,11 @@ export function ReportChart({
               cy="50%"
               outerRadius={Math.min(height, 400) / 2 - 20}
               fill="#8884d8"
-              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(1)}%`}
+              label={({ name, percent }) =>
+                `${name} ${(percent * 100).toFixed(1)}%`
+              }
             >
-              {chartData.map((entry, index) => (
+              {chartData.map((_entry, index) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={DEFAULT_COLORS[index % DEFAULT_COLORS.length]}
@@ -282,7 +311,11 @@ export function ReportChart({
               ))}
             </Pie>
             {showTooltip && (
-              <ChartTooltip content={<ChartTooltipContent formatter={tooltipFormatter} />} />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent formatter={tooltipFormatter as any} />
+                }
+              />
             )}
             {showLegend && <ChartLegend content={<ChartLegendContent />} />}
           </PieChart>
@@ -291,7 +324,9 @@ export function ReportChart({
       case "area":
         return (
           <AreaChart data={chartData}>
-            {showGrid && <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />}
+            {showGrid && (
+              <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+            )}
             {xAxisDataKey && (
               <XAxis
                 dataKey={xAxisDataKey}
@@ -300,12 +335,20 @@ export function ReportChart({
               />
             )}
             <YAxis
-              label={yAxisLabel ? { value: yAxisLabel, angle: -90, position: "insideLeft" } : undefined}
+              label={
+                yAxisLabel
+                  ? { value: yAxisLabel, angle: -90, position: "insideLeft" }
+                  : undefined
+              }
               tick={{ fill: "hsl(var(--muted-foreground))" }}
               tickLine={{ stroke: "hsl(var(--border))" }}
             />
             {showTooltip && (
-              <ChartTooltip content={<ChartTooltipContent formatter={tooltipFormatter} />} />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent formatter={tooltipFormatter as any} />
+                }
+              />
             )}
             {showLegend && <ChartLegend content={<ChartLegendContent />} />}
             {series.map((s, index) => (
@@ -313,7 +356,9 @@ export function ReportChart({
                 key={s.dataKey}
                 type="monotone"
                 dataKey={s.dataKey}
-                stroke={s.color || DEFAULT_COLORS[index % DEFAULT_COLORS.length]}
+                stroke={
+                  s.color || DEFAULT_COLORS[index % DEFAULT_COLORS.length]
+                }
                 fill={s.color || DEFAULT_COLORS[index % DEFAULT_COLORS.length]}
                 fillOpacity={0.6}
                 name={s.name}
@@ -338,7 +383,7 @@ export function ReportChart({
         <div style={{ height }}>
           <ChartContainer config={finalChartConfig}>
             <ResponsiveContainer width="100%" height="100%">
-              {renderChart()}
+              {renderChart() as React.ReactElement}
             </ResponsiveContainer>
           </ChartContainer>
         </div>
@@ -357,7 +402,7 @@ export function QuickChart({
   name,
   title,
   ...props
-}: Omit<ReportChartProps, 'series'> & {
+}: Omit<ReportChartProps, "series"> & {
   dataKey: string;
   name: string;
 }) {

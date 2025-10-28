@@ -2,13 +2,16 @@ import { Link } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { RiBarChartBoxLine, RiGroupLine, RiGamepadLine, RiLineChartLine, RiFileTextLine, RiMoneyDollarCircleLine } from "@remixicon/react";
+import { useAdminDashboardMetrics, useRecentActivity } from "@/hooks/useAdminDashboardMetrics";
 
 export default function AdminDashboard() {
-  // TODO: Replace with real data from database in Phase 4
-  const metrics = [
+  const { data: metricsData, isLoading: metricsLoading } = useAdminDashboardMetrics();
+  const { data: activityData, isLoading: activityLoading } = useRecentActivity();
+
+  const metrics = metricsData ? [
     {
       title: "Total Players",
-      value: "1,234",
+      value: metricsData.totalPlayers.toLocaleString(),
       change: "+12%",
       trend: "up",
       icon: RiGroupLine,
@@ -17,7 +20,7 @@ export default function AdminDashboard() {
     },
     {
       title: "Active Games",
-      value: "48",
+      value: metricsData.activeGames.toString(),
       change: "+3",
       trend: "up",
       icon: RiGamepadLine,
@@ -26,7 +29,7 @@ export default function AdminDashboard() {
     },
     {
       title: "Total Revenue",
-      value: "$45,678",
+      value: `$${metricsData.totalRevenue.toLocaleString()}`,
       change: "+23%",
       trend: "up",
       icon: RiMoneyDollarCircleLine,
@@ -35,21 +38,16 @@ export default function AdminDashboard() {
     },
     {
       title: "Engagement Rate",
-      value: "78.5%",
+      value: `${metricsData.engagementRate.toFixed(1)}%`,
       change: "+5.2%",
       trend: "up",
       icon: RiLineChartLine,
       color: "text-orange-600",
       bgColor: "bg-orange-100",
     },
-  ];
+  ] : [];
 
-  const recentActivity = [
-    { id: 1, action: "New game published", game: "Cyber Quest 2077", time: "2 hours ago" },
-    { id: 2, action: "Achievement unlocked", player: "PlayerOne", time: "5 hours ago" },
-    { id: 3, action: "Purchase completed", amount: "$29.99", time: "1 day ago" },
-    { id: 4, action: "New player joined", player: "GamerPro", time: "1 day ago" },
-  ];
+  const recentActivity = activityData || [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -76,30 +74,52 @@ export default function AdminDashboard() {
       <div className="container mx-auto px-6 py-8">
         {/* Metrics Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
-          {metrics.map((metric) => {
-            const Icon = metric.icon;
-            return (
-              <Card key={metric.title}>
+          {metricsLoading ? (
+            // Loading skeleton
+            Array.from({ length: 4 }).map((_, i) => (
+              <Card key={i}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    {metric.title}
-                  </CardTitle>
-                  <div className={`p-2 rounded-lg ${metric.bgColor}`}>
-                    <Icon className={`h-4 w-4 ${metric.color}`} />
+                  <div className="h-4 w-24 bg-muted rounded animate-pulse"></div>
+                  <div className="p-2 rounded-lg bg-muted">
+                    <div className="h-4 w-4"></div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{metric.value}</div>
-                  <p className="text-xs text-muted-foreground">
-                    <span className="text-green-600 font-medium">
-                      {metric.change}
-                    </span>{" "}
-                    from last month
-                  </p>
+                  <div className="h-8 w-20 bg-muted rounded animate-pulse mb-2"></div>
+                  <div className="h-3 w-32 bg-muted rounded animate-pulse"></div>
                 </CardContent>
               </Card>
-            );
-          })}
+            ))
+          ) : metrics.length > 0 ? (
+            metrics.map((metric) => {
+              const Icon = metric.icon;
+              return (
+                <Card key={metric.title}>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      {metric.title}
+                    </CardTitle>
+                    <div className={`p-2 rounded-lg ${metric.bgColor}`}>
+                      <Icon className={`h-4 w-4 ${metric.color}`} />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{metric.value}</div>
+                    <p className="text-xs text-muted-foreground">
+                      <span className="text-green-600 font-medium">
+                        {metric.change}
+                      </span>{" "}
+                      from last month
+                    </p>
+                  </CardContent>
+                </Card>
+              );
+            })
+          ) : (
+            <div className="col-span-4 text-center py-8 text-muted-foreground">
+              No metrics available
+            </div>
+          )}
         </div>
 
         {/* Reports and Activity */}
@@ -178,22 +198,32 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {recentActivity.map((activity) => (
-                  <div
-                    key={activity.id}
-                    className="flex items-start justify-between pb-4 border-b last:border-0 last:pb-0"
-                  >
-                    <div>
-                      <p className="font-medium">{activity.action}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {activity.game || activity.player || activity.amount}
-                      </p>
-                    </div>
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">
-                      {activity.time}
-                    </span>
+                {activityLoading ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    Loading recent activity...
                   </div>
-                ))}
+                ) : recentActivity.length > 0 ? (
+                  recentActivity.map((activity) => (
+                    <div
+                      key={activity.id}
+                      className="flex items-start justify-between pb-4 border-b last:border-0 last:pb-0"
+                    >
+                      <div>
+                        <p className="font-medium">{activity.action}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {activity.details}
+                        </p>
+                      </div>
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        {activity.time}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    No recent activity
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

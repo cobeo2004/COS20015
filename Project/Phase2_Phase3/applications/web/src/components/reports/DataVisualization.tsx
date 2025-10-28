@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ReportChart, type ChartType, type ChartSeries } from "./ReportChart";
-import { RiFullscreenLine, RiFullscreenExitLine, RiDownloadLine, RiSettings3Line } from "@remixicon/react";
+import {
+  RiFullscreenLine,
+  RiFullscreenExitLine,
+  RiDownloadLine,
+  RiSettings3Line,
+} from "@remixicon/react";
 
 export interface VisualizationConfig {
   id: string;
@@ -31,13 +37,13 @@ export interface DataVisualizationProps {
   /** Whether to show settings */
   showSettings?: boolean;
   /** Layout: 'tabs', 'grid', or 'stacked' */
-  layout?: 'tabs' | 'grid' | 'stacked';
+  layout?: "tabs" | "grid" | "stacked";
   /** Grid columns for grid layout */
   gridColumns?: 1 | 2 | 3 | 4;
   /** Chart click handler */
   onChartClick?: (chartId: string, dataPoint: any) => void;
   /** Export handler */
-  onExport?: (chartId: string, format: 'png' | 'svg') => void;
+  onExport?: (chartId: string, format: "png" | "svg") => void;
   /** CSS class name */
   className?: string;
 }
@@ -54,13 +60,14 @@ export function DataVisualization({
   allowFullscreen = true,
   showExport = true,
   showSettings = false,
-  layout = 'tabs',
+  layout = "tabs",
   gridColumns = 2,
-  onChartClick,
   onExport,
   className,
 }: DataVisualizationProps) {
-  const [activeTab, setActiveTab] = useState(defaultTab || visualizations[0]?.id);
+  const [activeTab, setActiveTab] = useState(
+    defaultTab || visualizations[0]?.id
+  );
   const [fullscreenChart, setFullscreenChart] = useState<string | null>(null);
 
   // Handle chart fullscreen toggle
@@ -73,17 +80,22 @@ export function DataVisualization({
   };
 
   // Render individual visualization
-  const renderVisualization = (config: VisualizationConfig, isFullscreen = false) => {
-    const chartData = data.map(item => ({
+  const renderVisualization = (
+    config: VisualizationConfig,
+    isFullscreen = false
+  ) => {
+    const chartData = data.map((item) => ({
       ...item,
       [config.dataKey]: item[config.dataKey] || 0,
     }));
 
-    const series: ChartSeries[] = [{
-      dataKey: config.dataKey,
-      name: config.name,
-      color: config.color,
-    }];
+    const series: ChartSeries[] = [
+      {
+        dataKey: config.dataKey,
+        name: config.name,
+        color: config.color,
+      },
+    ];
 
     const isLoading = !data || data.length === 0;
     const error = null;
@@ -105,7 +117,7 @@ export function DataVisualization({
             color: config.color,
           },
         }}
-        className={isFullscreen ? 'fixed inset-0 z-50 bg-background' : ''}
+        className={isFullscreen ? "fixed inset-0 z-50 bg-background" : ""}
       />
     );
   };
@@ -114,7 +126,7 @@ export function DataVisualization({
   const FullscreenOverlay = () => {
     if (!fullscreenChart) return null;
 
-    const config = visualizations.find(v => v.id === fullscreenChart);
+    const config = visualizations.find((v) => v.id === fullscreenChart);
     if (!config) return null;
 
     return (
@@ -127,7 +139,7 @@ export function DataVisualization({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => onExport(config.id, 'png')}
+                onClick={() => onExport(config.id, "png")}
               >
                 <RiDownloadLine className="h-4 w-4 mr-2" />
                 Export
@@ -153,7 +165,7 @@ export function DataVisualization({
   };
 
   // Grid layout
-  if (layout === 'grid') {
+  if (layout === "grid") {
     const gridCols = {
       1: "grid-cols-1",
       2: "grid-cols-1 md:grid-cols-2",
@@ -182,9 +194,7 @@ export function DataVisualization({
                     )}
                   </div>
                 </CardHeader>
-                <CardContent>
-                  {renderVisualization(config)}
-                </CardContent>
+                <CardContent>{renderVisualization(config)}</CardContent>
               </Card>
             </div>
           ))}
@@ -195,7 +205,7 @@ export function DataVisualization({
   }
 
   // Stacked layout
-  if (layout === 'stacked') {
+  if (layout === "stacked") {
     return (
       <div className={`space-y-6 ${className}`}>
         {visualizations.map((config) => (
@@ -209,7 +219,7 @@ export function DataVisualization({
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => onExport(config.id, 'png')}
+                        onClick={() => onExport(config.id, "png")}
                       >
                         <RiDownloadLine className="h-4 w-4 mr-1" />
                         Export
@@ -228,9 +238,7 @@ export function DataVisualization({
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
-                {renderVisualization(config)}
-              </CardContent>
+              <CardContent>{renderVisualization(config)}</CardContent>
             </Card>
           </div>
         ))}
@@ -252,7 +260,11 @@ export function DataVisualization({
         </TabsList>
 
         {visualizations.map((config) => (
-          <TabsContent key={config.id} value={config.id} className="space-y-4 mt-6">
+          <TabsContent
+            key={config.id}
+            value={config.id}
+            className="space-y-4 mt-6"
+          >
             <div className="relative">
               <Card>
                 <CardHeader className="pb-3">
@@ -269,7 +281,7 @@ export function DataVisualization({
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => onExport(config.id, 'png')}
+                          onClick={() => onExport(config.id, "png")}
                         >
                           <RiDownloadLine className="h-4 w-4 mr-2" />
                           Export
@@ -288,9 +300,7 @@ export function DataVisualization({
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  {renderVisualization(config)}
-                </CardContent>
+                <CardContent>{renderVisualization(config)}</CardContent>
               </Card>
             </div>
           </TabsContent>
@@ -308,53 +318,53 @@ export function DataVisualization({
 export const VisualizationPresets = {
   // Game Performance Presets
   revenueByGame: () => ({
-    id: 'revenue-by-game',
-    title: 'Revenue by Game',
-    type: 'bar' as ChartType,
-    dataKey: 'total_revenue',
-    name: 'Revenue',
-    color: '#10b981',
+    id: "revenue-by-game",
+    title: "Revenue by Game",
+    type: "bar" as ChartType,
+    dataKey: "total_revenue",
+    name: "Revenue",
+    color: "#10b981",
     height: 300,
   }),
 
   playerEngagement: () => ({
-    id: 'player-engagement',
-    title: 'Player Engagement Over Time',
-    type: 'line' as ChartType,
-    dataKey: 'active_players',
-    name: 'Active Players',
-    color: '#3b82f6',
+    id: "player-engagement",
+    title: "Player Engagement Over Time",
+    type: "line" as ChartType,
+    dataKey: "active_players",
+    name: "Active Players",
+    color: "#3b82f6",
     height: 300,
   }),
 
   gameRatings: () => ({
-    id: 'game-ratings',
-    title: 'Game Rating Distribution',
-    type: 'pie' as ChartType,
-    dataKey: 'average_rating',
-    name: 'Rating',
-    color: '#f59e0b',
+    id: "game-ratings",
+    title: "Game Rating Distribution",
+    type: "pie" as ChartType,
+    dataKey: "average_rating",
+    name: "Rating",
+    color: "#f59e0b",
     height: 300,
   }),
 
   // Developer Success Presets
   developerRevenue: () => ({
-    id: 'developer-revenue',
-    title: 'Revenue by Developer',
-    type: 'bar' as ChartType,
-    dataKey: 'total_revenue',
-    name: 'Revenue',
-    color: '#8b5cf6',
+    id: "developer-revenue",
+    title: "Revenue by Developer",
+    type: "bar" as ChartType,
+    dataKey: "total_revenue",
+    name: "Revenue",
+    color: "#8b5cf6",
     height: 300,
   }),
 
   gamePerformance: () => ({
-    id: 'game-performance',
-    title: 'Game Performance Metrics',
-    type: 'area' as ChartType,
-    dataKey: 'total_playtime_hours',
-    name: 'Playtime (hours)',
-    color: '#06b6d4',
+    id: "game-performance",
+    title: "Game Performance Metrics",
+    type: "area" as ChartType,
+    dataKey: "total_playtime_hours",
+    name: "Playtime (hours)",
+    color: "#06b6d4",
     height: 300,
   }),
 };

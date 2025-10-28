@@ -1,8 +1,17 @@
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RiArrowUpLine, RiArrowDownLine, RiArrowRightLine, RiTrophyLine, RiUser3Line, RiMoneyDollarCircleLine, RiTimeLine } from "@remixicon/react";
+import {
+  RiArrowUpLine,
+  RiArrowDownLine,
+  RiArrowRightLine,
+  RiTrophyLine,
+  RiUser3Line,
+  RiMoneyDollarCircleLine,
+  RiTimeLine,
+} from "@remixicon/react";
 
 export interface MetricItem {
   /** Metric title */
@@ -14,11 +23,11 @@ export interface MetricItem {
   /** Icon component */
   icon?: React.ComponentType<{ className?: string }>;
   /** Metric trend: 'up', 'down', 'neutral' */
-  trend?: 'up' | 'down' | 'neutral';
+  trend?: "up" | "down" | "neutral";
   /** Trend percentage */
   trendPercentage?: number;
   /** Custom color for the metric */
-  color?: 'primary' | 'success' | 'warning' | 'danger' | 'info';
+  color?: "primary" | "success" | "warning" | "danger" | "info";
   /** Large number display (reduces font size for long numbers) */
   large?: boolean;
   /** Formatted value display */
@@ -63,53 +72,53 @@ export function ReportMetrics({
   };
 
   // Color mappings
-  const getColorClasses = (color?: MetricItem['color']) => {
+  const getColorClasses = (color?: MetricItem["color"]) => {
     switch (color) {
-      case 'success':
+      case "success":
         return {
-          bg: 'bg-green-50 dark:bg-green-950',
-          border: 'border-green-200 dark:border-green-800',
-          text: 'text-green-700 dark:text-green-300',
-          icon: 'text-green-600 dark:text-green-400',
+          bg: "bg-green-50 dark:bg-green-950",
+          border: "border-green-200 dark:border-green-800",
+          text: "text-green-700 dark:text-green-300",
+          icon: "text-green-600 dark:text-green-400",
         };
-      case 'warning':
+      case "warning":
         return {
-          bg: 'bg-yellow-50 dark:bg-yellow-950',
-          border: 'border-yellow-200 dark:border-yellow-800',
-          text: 'text-yellow-700 dark:text-yellow-300',
-          icon: 'text-yellow-600 dark:text-yellow-400',
+          bg: "bg-yellow-50 dark:bg-yellow-950",
+          border: "border-yellow-200 dark:border-yellow-800",
+          text: "text-yellow-700 dark:text-yellow-300",
+          icon: "text-yellow-600 dark:text-yellow-400",
         };
-      case 'danger':
+      case "danger":
         return {
-          bg: 'bg-red-50 dark:bg-red-950',
-          border: 'border-red-200 dark:border-red-800',
-          text: 'text-red-700 dark:text-red-300',
-          icon: 'text-red-600 dark:text-red-400',
+          bg: "bg-red-50 dark:bg-red-950",
+          border: "border-red-200 dark:border-red-800",
+          text: "text-red-700 dark:text-red-300",
+          icon: "text-red-600 dark:text-red-400",
         };
-      case 'info':
+      case "info":
         return {
-          bg: 'bg-blue-50 dark:bg-blue-950',
-          border: 'border-blue-200 dark:border-blue-800',
-          text: 'text-blue-700 dark:text-blue-300',
-          icon: 'text-blue-600 dark:text-blue-400',
+          bg: "bg-blue-50 dark:bg-blue-950",
+          border: "border-blue-200 dark:border-blue-800",
+          text: "text-blue-700 dark:text-blue-300",
+          icon: "text-blue-600 dark:text-blue-400",
         };
-      case 'primary':
+      case "primary":
       default:
         return {
-          bg: 'bg-primary/10 dark:bg-primary/20',
-          border: 'border-primary/20 dark:border-primary/30',
-          text: 'text-primary dark:text-primary-foreground',
-          icon: 'text-primary',
+          bg: "bg-primary/10 dark:bg-primary/20",
+          border: "border-primary/20 dark:border-primary/30",
+          text: "text-primary dark:text-primary-foreground",
+          icon: "text-primary",
         };
     }
   };
 
   // Trend icon component
-  const TrendIcon = ({ trend }: { trend?: 'up' | 'down' | 'neutral' }) => {
+  const TrendIcon = ({ trend }: { trend?: "up" | "down" | "neutral" }) => {
     switch (trend) {
-      case 'up':
+      case "up":
         return <RiArrowUpLine className="h-4 w-4 text-green-600" />;
-      case 'down':
+      case "down":
         return <RiArrowDownLine className="h-4 w-4 text-red-600" />;
       default:
         return <RiArrowRightLine className="h-4 w-4 text-muted-foreground" />;
@@ -122,7 +131,7 @@ export function ReportMetrics({
       return metric.formatter(metric.value);
     }
 
-    if (typeof metric.value === 'number') {
+    if (typeof metric.value === "number") {
       // Format large numbers with commas
       return metric.value.toLocaleString();
     }
@@ -136,7 +145,7 @@ export function ReportMetrics({
       <div className={`grid ${gridCols[columns]} gap-4 ${className}`}>
         {[...Array(columns)].map((_, index) => (
           <Card key={index}>
-            <CardContent className={`p-6 ${compact ? 'p-4' : 'p-6'}`}>
+            <CardContent className={`p-6 ${compact ? "p-4" : "p-6"}`}>
               <div className="flex items-center justify-between mb-2">
                 <Skeleton className="h-8 w-8 rounded" />
                 <Skeleton className="h-4 w-16" />
@@ -157,8 +166,11 @@ export function ReportMetrics({
         const Icon = metric.icon;
 
         return (
-          <Card key={index} className={`${colors.border} border-2 ${colors.bg}`}>
-            <CardContent className={`p-6 ${compact ? 'p-4' : 'p-6'}`}>
+          <Card
+            key={index}
+            className={`${colors.border} border-2 ${colors.bg}`}
+          >
+            <CardContent className={`p-6 ${compact ? "p-4" : "p-6"}`}>
               <div className="flex items-center justify-between mb-2">
                 {Icon && (
                   <div className={`p-2 rounded-lg ${colors.bg} ${colors.icon}`}>
@@ -170,7 +182,7 @@ export function ReportMetrics({
                     <TrendIcon trend={metric.trend} />
                     {metric.trendPercentage && (
                       <span className="text-xs text-muted-foreground">
-                        {metric.trend.trend === 'up' ? '+' : ''}
+                        {metric.trend === "up" ? "+" : ""}
                         {metric.trendPercentage}%
                       </span>
                     )}
@@ -178,8 +190,12 @@ export function ReportMetrics({
                 )}
               </div>
 
-              <div className={`${metric.large ? 'space-y-1' : 'space-y-2'}`}>
-                <div className={`font-bold ${metric.large ? 'text-xl' : 'text-2xl'} ${colors.text}`}>
+              <div className={`${metric.large ? "space-y-1" : "space-y-2"}`}>
+                <div
+                  className={`font-bold ${
+                    metric.large ? "text-xl" : "text-2xl"
+                  } ${colors.text}`}
+                >
                   {formatValue(metric)}
                 </div>
 
@@ -250,7 +266,7 @@ export const CommonMetrics = {
     color: percentage >= 0 ? "success" : "danger",
     trend: percentage >= 0 ? "up" : "down",
     trendPercentage: Math.abs(percentage),
-    formatter: (v) => `${v >= 0 ? '+' : ''}${(v as number).toFixed(1)}%`,
+    formatter: (v) => `${v >= 0 ? "+" : ""}${(v as number).toFixed(1)}%`,
   }),
 
   playerGrowth: (percentage: number): MetricItem => ({
@@ -260,6 +276,6 @@ export const CommonMetrics = {
     color: percentage >= 0 ? "success" : "danger",
     trend: percentage >= 0 ? "up" : "down",
     trendPercentage: Math.abs(percentage),
-    formatter: (v) => `${v >= 0 ? '+' : ''}${(v as number).toFixed(1)}%`,
+    formatter: (v) => `${v >= 0 ? "+" : ""}${(v as number).toFixed(1)}%`,
   }),
 };

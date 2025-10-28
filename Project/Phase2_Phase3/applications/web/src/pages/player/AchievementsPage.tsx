@@ -17,76 +17,22 @@ import {
   RiCheckLine,
 } from "@remixicon/react";
 import { Check, Lock, Trophy } from "lucide-react";
+import { usePlayerAchievements } from "@/hooks/usePlayerAchievements";
 
 export default function AchievementsPage() {
   const { playerId } = useParams<{ playerId: string }>();
+  const { data: achievementsData, isLoading } = usePlayerAchievements(playerId || "");
 
-  // TODO: Replace with real data from database
   const achievements = {
-    unlocked: [
-      {
-        id: 1,
-        name: "Speed Runner",
-        description: "Complete a game in under 1 hour",
-        points: 100,
-        unlockedAt: "2 days ago",
-        rarity: "Rare",
-      },
-      {
-        id: 2,
-        name: "Collector",
-        description: "Collect all items in a game",
-        points: 150,
-        unlockedAt: "5 days ago",
-        rarity: "Epic",
-      },
-      {
-        id: 3,
-        name: "Master",
-        description: "Reach level 40",
-        points: 200,
-        unlockedAt: "1 week ago",
-        rarity: "Legendary",
-      },
-    ],
-    locked: [
-      {
-        id: 4,
-        name: "Perfectionist",
-        description: "Complete all achievements in one game",
-        points: 500,
-        progress: 65,
-        rarity: "Legendary",
-      },
-      {
-        id: 5,
-        name: "Marathon",
-        description: "Play for 10 consecutive hours",
-        points: 250,
-        progress: 40,
-        rarity: "Epic",
-      },
-      {
-        id: 6,
-        name: "Social Butterfly",
-        description: "Add 50 friends",
-        points: 100,
-        progress: 20,
-        rarity: "Rare",
-      },
-    ],
+    unlocked: achievementsData?.unlocked || [],
+    locked: achievementsData?.locked || [],
   };
 
   const totalAchievements =
     achievements.unlocked.length + achievements.locked.length;
   const unlockedCount = achievements.unlocked.length;
-  const completionPercentage = Math.round(
-    (unlockedCount / totalAchievements) * 100
-  );
-  const totalPoints = achievements.unlocked.reduce(
-    (sum, a) => sum + a.points,
-    0
-  );
+  const completionPercentage = achievementsData?.completionPercentage || 0;
+  const totalPoints = achievementsData?.totalPoints || 0;
 
   const getRarityColor = (rarity: string) => {
     switch (rarity) {
@@ -123,48 +69,64 @@ export default function AchievementsPage() {
       <div className="container mx-auto px-6 py-8">
         {/* Overview Stats */}
         <div className="grid gap-6 md:grid-cols-3 mb-8">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium">
-                Total Points
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{totalPoints}</div>
-              <p className="text-sm text-muted-foreground">
-                Achievement points earned
-              </p>
-            </CardContent>
-          </Card>
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <Card key={i}>
+                <CardHeader>
+                  <div className="h-4 w-24 bg-muted rounded animate-pulse" />
+                </CardHeader>
+                <CardContent>
+                  <div className="h-9 w-20 bg-muted rounded animate-pulse mb-2" />
+                  <div className="h-3 w-40 bg-muted rounded animate-pulse" />
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm font-medium">
+                    Total Points
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">{totalPoints}</div>
+                  <p className="text-sm text-muted-foreground">
+                    Achievement points earned
+                  </p>
+                </CardContent>
+              </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium">Unlocked</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">
-                {unlockedCount}/{totalAchievements}
-              </div>
-              <Progress value={completionPercentage} className="mt-2" />
-              <p className="text-sm text-muted-foreground mt-1">
-                {completionPercentage}% complete
-              </p>
-            </CardContent>
-          </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm font-medium">Unlocked</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">
+                    {unlockedCount}/{totalAchievements}
+                  </div>
+                  <Progress value={completionPercentage} className="mt-2" />
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {completionPercentage.toFixed(0)}% complete
+                  </p>
+                </CardContent>
+              </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium">
-                Next Milestone
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">25</div>
-              <p className="text-sm text-muted-foreground">
-                {25 - unlockedCount} achievements to go
-              </p>
-            </CardContent>
-          </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm font-medium">
+                    Next Milestone
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">25</div>
+                  <p className="text-sm text-muted-foreground">
+                    {Math.max(0, 25 - unlockedCount)} achievements to go
+                  </p>
+                </CardContent>
+              </Card>
+            </>
+          )}
         </div>
 
         {/* Achievements List */}
@@ -180,9 +142,149 @@ export default function AchievementsPage() {
           </TabsList>
 
           <TabsContent value="all" className="space-y-4">
-            {/* Unlocked Achievements */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Unlocked</h3>
+            {isLoading ? (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <Card key={i}>
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <div className="p-2 rounded-lg bg-muted animate-pulse">
+                          <div className="h-5 w-5" />
+                        </div>
+                        <div className="h-5 w-5 bg-muted rounded animate-pulse" />
+                      </div>
+                      <div className="h-6 w-3/4 bg-muted rounded animate-pulse mb-2" />
+                      <div className="h-4 w-full bg-muted rounded animate-pulse" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <div className="h-5 w-16 bg-muted rounded animate-pulse" />
+                        <div className="h-4 w-12 bg-muted rounded animate-pulse" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <>
+                {/* Unlocked Achievements */}
+                {achievements.unlocked.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Unlocked</h3>
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                      {achievements.unlocked.map((achievement) => (
+                        <Card
+                          key={achievement.id}
+                          className="border-green-200 bg-green-50/50"
+                        >
+                          <CardHeader>
+                            <div className="flex items-start justify-between">
+                              <div className="p-2 rounded-lg bg-green-100">
+                                <RiTrophyLine className="h-5 w-5 text-green-600" />
+                              </div>
+                              <RiCheckLine className="h-5 w-5 text-green-600" />
+                            </div>
+                            <CardTitle className="text-lg">
+                              {achievement.name}
+                            </CardTitle>
+                            <CardDescription>
+                              {achievement.description}
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="flex items-center justify-between">
+                              <Badge className={getRarityColor(achievement.rarity)}>
+                                {achievement.rarity}
+                              </Badge>
+                              <span className="text-sm font-semibold">
+                                {achievement.points} pts
+                              </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-2">
+                              Unlocked {achievement.unlockedAt}
+                            </p>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Locked Achievements */}
+                {achievements.locked.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Locked</h3>
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                      {achievements.locked.map((achievement) => (
+                        <Card key={achievement.id}>
+                          <CardHeader>
+                            <div className="flex items-start justify-between">
+                              <div className="p-2 rounded-lg bg-muted">
+                                <RiLockLine className="h-5 w-5 text-muted-foreground" />
+                              </div>
+                            </div>
+                            <CardTitle className="text-lg">
+                              {achievement.name}
+                            </CardTitle>
+                            <CardDescription>
+                              {achievement.description}
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="flex items-center justify-between">
+                              <Badge className={getRarityColor(achievement.rarity)}>
+                                {achievement.rarity}
+                              </Badge>
+                              <span className="text-sm font-semibold">
+                                {achievement.points} pts
+                              </span>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Empty State */}
+                {achievements.unlocked.length === 0 && achievements.locked.length === 0 && (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <RiTrophyLine className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                    <p className="text-lg font-medium mb-2">No Achievements</p>
+                    <p className="text-sm">
+                      Start playing games to unlock achievements
+                    </p>
+                  </div>
+                )}
+              </>
+            )}
+          </TabsContent>
+
+          <TabsContent value="unlocked" className="space-y-4">
+            {isLoading ? (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <Card key={i} className="border-green-200 bg-green-50/50">
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <div className="p-2 rounded-lg bg-muted animate-pulse">
+                          <div className="h-5 w-5" />
+                        </div>
+                        <div className="h-5 w-5 bg-muted rounded animate-pulse" />
+                      </div>
+                      <div className="h-6 w-3/4 bg-muted rounded animate-pulse mb-2" />
+                      <div className="h-4 w-full bg-muted rounded animate-pulse" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <div className="h-5 w-16 bg-muted rounded animate-pulse" />
+                        <div className="h-4 w-12 bg-muted rounded animate-pulse" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : achievements.unlocked.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {achievements.unlocked.map((achievement) => (
                   <Card
@@ -192,16 +294,14 @@ export default function AchievementsPage() {
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="p-2 rounded-lg bg-green-100">
-                          <RiTrophyLine className="h-5 w-5 text-green-600" />
+                          <Trophy className="h-5 w-5 text-green-600" />
                         </div>
-                        <RiCheckLine className="h-5 w-5 text-green-600" />
+                        <Check className="h-5 w-5 text-green-600" />
                       </div>
                       <CardTitle className="text-lg">
                         {achievement.name}
                       </CardTitle>
-                      <CardDescription>
-                        {achievement.description}
-                      </CardDescription>
+                      <CardDescription>{achievement.description}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between">
@@ -219,121 +319,56 @@ export default function AchievementsPage() {
                   </Card>
                 ))}
               </div>
-            </div>
+            ) : (
+              <div className="text-center py-12 text-muted-foreground">
+                <RiTrophyLine className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                <p className="text-lg font-medium mb-2">No Unlocked Achievements</p>
+                <p className="text-sm">
+                  Start playing games to unlock achievements
+                </p>
+              </div>
+            )}
+          </TabsContent>
 
-            {/* Locked Achievements */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4">In Progress</h3>
+          <TabsContent value="locked" className="space-y-4">
+            {isLoading ? (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <Card key={i}>
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <div className="p-2 rounded-lg bg-muted animate-pulse">
+                          <div className="h-5 w-5" />
+                        </div>
+                      </div>
+                      <div className="h-6 w-3/4 bg-muted rounded animate-pulse mb-2" />
+                      <div className="h-4 w-full bg-muted rounded animate-pulse" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <div className="h-5 w-16 bg-muted rounded animate-pulse" />
+                        <div className="h-4 w-12 bg-muted rounded animate-pulse" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : achievements.locked.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {achievements.locked.map((achievement) => (
                   <Card key={achievement.id}>
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="p-2 rounded-lg bg-muted">
-                          <RiLockLine className="h-5 w-5 text-muted-foreground" />
+                          <Lock className="h-5 w-5 text-muted-foreground" />
                         </div>
                       </div>
                       <CardTitle className="text-lg">
                         {achievement.name}
                       </CardTitle>
-                      <CardDescription>
-                        {achievement.description}
-                      </CardDescription>
+                      <CardDescription>{achievement.description}</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-3">
-                        <div>
-                          <div className="flex justify-between text-sm mb-1">
-                            <span className="text-muted-foreground">
-                              Progress
-                            </span>
-                            <span className="font-medium">
-                              {achievement.progress}%
-                            </span>
-                          </div>
-                          <Progress value={achievement.progress} />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <Badge className={getRarityColor(achievement.rarity)}>
-                            {achievement.rarity}
-                          </Badge>
-                          <span className="text-sm font-semibold">
-                            {achievement.points} pts
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="unlocked" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {achievements.unlocked.map((achievement) => (
-                <Card
-                  key={achievement.id}
-                  className="border-green-200 bg-green-50/50"
-                >
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="p-2 rounded-lg bg-green-100">
-                        <Trophy className="h-5 w-5 text-green-600" />
-                      </div>
-                      <Check className="h-5 w-5 text-green-600" />
-                    </div>
-                    <CardTitle className="text-lg">
-                      {achievement.name}
-                    </CardTitle>
-                    <CardDescription>{achievement.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <Badge className={getRarityColor(achievement.rarity)}>
-                        {achievement.rarity}
-                      </Badge>
-                      <span className="text-sm font-semibold">
-                        {achievement.points} pts
-                      </span>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      Unlocked {achievement.unlockedAt}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="locked" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {achievements.locked.map((achievement) => (
-                <Card key={achievement.id}>
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="p-2 rounded-lg bg-muted">
-                        <Lock className="h-5 w-5 text-muted-foreground" />
-                      </div>
-                    </div>
-                    <CardTitle className="text-lg">
-                      {achievement.name}
-                    </CardTitle>
-                    <CardDescription>{achievement.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div>
-                        <div className="flex justify-between text-sm mb-1">
-                          <span className="text-muted-foreground">
-                            Progress
-                          </span>
-                          <span className="font-medium">
-                            {achievement.progress}%
-                          </span>
-                        </div>
-                        <Progress value={achievement.progress} />
-                      </div>
                       <div className="flex items-center justify-between">
                         <Badge className={getRarityColor(achievement.rarity)}>
                           {achievement.rarity}
@@ -342,11 +377,19 @@ export default function AchievementsPage() {
                           {achievement.points} pts
                         </span>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 text-muted-foreground">
+                <RiLockLine className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                <p className="text-lg font-medium mb-2">All Achievements Unlocked!</p>
+                <p className="text-sm">
+                  Great job! You've unlocked all available achievements
+                </p>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </div>

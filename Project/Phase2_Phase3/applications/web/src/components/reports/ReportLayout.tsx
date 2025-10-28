@@ -3,9 +3,12 @@ import { Link } from "react-router";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RiArrowLeftLine, RiDownloadLine, RiErrorWarningLine } from "@remixicon/react";
+import {
+  RiArrowLeftLine,
+  RiDownloadLine,
+  RiErrorWarningLine,
+} from "@remixicon/react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface ReportLayoutProps {

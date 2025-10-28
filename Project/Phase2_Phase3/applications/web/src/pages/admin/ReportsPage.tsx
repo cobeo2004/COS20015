@@ -1,39 +1,68 @@
 import { Link } from "react-router";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { RiArrowLeftLine, RiBarChartBoxLine, RiGroupLine, RiBuilding2Line, RiDownloadLine } from "@remixicon/react";
+import {
+  RiArrowLeftLine,
+  RiBarChartBoxLine,
+  RiGroupLine,
+  RiBuilding2Line,
+} from "@remixicon/react";
 
 export default function ReportsPage() {
   const reports = [
     {
       id: 1,
       title: "Game Performance Analytics",
-      description: "Comprehensive analysis of game revenue, playtime, player engagement, and ratings across all titles",
+      description:
+        "Comprehensive analysis of game revenue, playtime, player engagement, and ratings across all titles",
       icon: RiBarChartBoxLine,
       color: "text-blue-600",
       bgColor: "bg-blue-100",
-      metrics: ["Revenue Trends", "Active Players", "Average Rating", "Total Playtime"],
+      metrics: [
+        "Revenue Trends",
+        "Active Players",
+        "Average Rating",
+        "Total Playtime",
+      ],
       dataSource: "Games + Sessions + Purchases + Developers",
     },
     {
       id: 2,
       title: "Player Engagement Analysis",
-      description: "Detailed insights into player behavior, session duration, achievement completion, and retention rates",
+      description:
+        "Detailed insights into player behavior, session duration, achievement completion, and retention rates",
       icon: RiGroupLine,
       color: "text-purple-600",
       bgColor: "bg-purple-100",
-      metrics: ["Session Duration", "Achievement Rate", "Retention", "Engagement Score"],
+      metrics: [
+        "Session Duration",
+        "Achievement Rate",
+        "Retention",
+        "Engagement Score",
+      ],
       dataSource: "Players + Sessions + Achievements + Profiles",
     },
     {
       id: 3,
       title: "Developer Success Dashboard",
-      description: "Studio performance metrics including total games, revenue, average ratings, and player base",
+      description:
+        "Studio performance metrics including total games, revenue, average ratings, and player base",
       icon: RiBuilding2Line,
       color: "text-green-600",
       bgColor: "bg-green-100",
-      metrics: ["Total Games", "Total Revenue", "Avg Game Rating", "Active Users"],
+      metrics: [
+        "Total Games",
+        "Total Revenue",
+        "Avg Game Rating",
+        "Active Users",
+      ],
       dataSource: "Developers + Games + Purchases + Sessions",
     },
   ];
@@ -53,7 +82,8 @@ export default function ReportsPage() {
             <div>
               <h1 className="text-4xl font-bold mb-2">Reports & Analytics</h1>
               <p className="text-muted-foreground">
-                Advanced reports combining data from structured, semi-structured, and unstructured sources
+                Advanced reports combining data from structured,
+                semi-structured, and unstructured sources
               </p>
             </div>
             <Badge variant="secondary" className="text-sm">
@@ -113,16 +143,15 @@ export default function ReportsPage() {
 
                     {/* Actions */}
                     <div className="flex gap-3 pt-2">
-                      <Link to={`/admin/reports/${report.id}`} className="flex-1">
+                      <Link
+                        to={`/admin/reports/${report.id}`}
+                        className="flex-1"
+                      >
                         <Button className="w-full">
                           <RiBarChartBoxLine className="h-4 w-4 mr-2" />
                           View Report
                         </Button>
                       </Link>
-                      <Button variant="outline" disabled>
-                        <RiDownloadLine className="h-4 w-4 mr-2" />
-                        Export
-                      </Button>
                     </div>
                   </div>
                 </CardContent>
@@ -138,15 +167,25 @@ export default function ReportsPage() {
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground space-y-2">
             <p>
-              All reports integrate data from multiple sources to provide comprehensive insights:
+              All reports integrate data from multiple sources to provide
+              comprehensive insights:
             </p>
             <ul className="list-disc list-inside space-y-1 ml-2">
-              <li><strong>Structured data:</strong> PostgreSQL relational tables (players, games, sessions, etc.)</li>
-              <li><strong>Semi-structured data:</strong> JSONB columns for flexible metadata</li>
-              <li><strong>Unstructured data:</strong> Image URLs and text content</li>
+              <li>
+                <strong>Structured data:</strong> PostgreSQL relational tables
+                (players, games, sessions, etc.)
+              </li>
+              <li>
+                <strong>Semi-structured data:</strong> JSONB columns for
+                flexible metadata
+              </li>
+              <li>
+                <strong>Unstructured data:</strong> Image URLs and text content
+              </li>
             </ul>
             <p className="pt-2">
-              Each report includes filtering, sorting, and export capabilities (CSV/PDF).
+              Each report includes filtering, sorting, and export capabilities
+              (CSV/PDF).
             </p>
           </CardContent>
         </Card>
