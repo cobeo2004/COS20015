@@ -47,7 +47,7 @@ export default function LeaderboardPage() {
       {/* Header */}
       <div className="border-b">
         <div className="container mx-auto px-6 py-8">
-          <Link to={`/player/${playerId}`}>
+          <Link prefetch="intent" to={`/player/${playerId}`}>
             <Button variant="ghost" size="sm" className="mb-4">
               <RiArrowLeftLine className="h-4 w-4 mr-2" />
               Back to Dashboard

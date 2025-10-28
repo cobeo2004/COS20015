@@ -4,7 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RiArrowRightLine, RiBarChartBoxLine, RiUserLine, RiGameLine, RiTeamLine } from "@remixicon/react";
+import {
+  RiArrowRightLine,
+  RiBarChartBoxLine,
+  RiUserLine,
+  RiGameLine,
+  RiTeamLine,
+} from "@remixicon/react";
 
 export interface ReportCardProps {
   /** Report title */
@@ -27,7 +33,7 @@ export interface ReportCardProps {
   /** Whether to show loading skeleton */
   isLoading?: boolean;
   /** Card variant: 'default', 'featured' */
-  variant?: 'default' | 'featured';
+  variant?: "default" | "featured";
   /** Icon component */
   icon?: React.ComponentType<{ className?: string }>;
   /** CSS class name */
@@ -35,7 +41,7 @@ export interface ReportCardProps {
   /** Whether the card is disabled */
   disabled?: boolean;
   /** Optional status badge */
-  status?: 'draft' | 'ready' | 'error';
+  status?: "draft" | "ready" | "error";
 }
 
 /**
@@ -52,7 +58,7 @@ export function ReportCard({
   onClick,
   to,
   isLoading = false,
-  variant = 'default',
+  variant = "default",
   icon,
   className,
   disabled = false,
@@ -61,14 +67,14 @@ export function ReportCard({
   // Default icons based on report type
   const getDefaultIcon = () => {
     switch (type.toLowerCase()) {
-      case 'game':
-      case 'performance':
+      case "game":
+      case "performance":
         return RiGameLine;
-      case 'player':
-      case 'engagement':
+      case "player":
+      case "engagement":
         return RiUserLine;
-      case 'developer':
-      case 'success':
+      case "developer":
+      case "success":
         return RiTeamLine;
       default:
         return RiBarChartBoxLine;
@@ -97,17 +103,20 @@ export function ReportCard({
 
   // Card content
   const cardContent = (
-    <Card className={`
+    <Card
+      className={`
       relative overflow-hidden transition-all duration-200
-      ${variant === 'featured'
-        ? 'border-2 border-primary/20 bg-primary/5 dark:bg-primary/10 hover:shadow-lg hover:scale-[1.02]'
-        : 'hover:shadow-md hover:border-primary/50'
+      ${
+        variant === "featured"
+          ? "border-2 border-primary/20 bg-primary/5 dark:bg-primary/10 hover:shadow-lg hover:scale-[1.02]"
+          : "hover:shadow-md hover:border-primary/50"
       }
-      ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+      ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
       ${className}
-    `}>
+    `}
+    >
       {/* Gradient overlay for featured cards */}
-      {variant === 'featured' && (
+      {variant === "featured" && (
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20 pointer-events-none" />
       )}
 
@@ -118,9 +127,11 @@ export function ReportCard({
               <Icon className="h-5 w-5 text-primary" />
             </div>
             <div className="flex items-center gap-2">
-              <CardTitle className={`${
-                variant === 'featured' ? 'text-xl' : 'text-lg'
-              } leading-tight`}>
+              <CardTitle
+                className={`${
+                  variant === "featured" ? "text-xl" : "text-lg"
+                } leading-tight`}
+              >
                 {title}
               </CardTitle>
               {reportNumber && (
@@ -147,7 +158,10 @@ export function ReportCard({
           {metrics.length > 0 && (
             <div className="grid grid-cols-2 gap-3">
               {metrics.slice(0, 4).map((metric, index) => (
-                <div key={index} className="text-center p-2 bg-muted/50 rounded-lg">
+                <div
+                  key={index}
+                  className="text-center p-2 bg-muted/50 rounded-lg"
+                >
                   <div className="text-lg font-semibold text-foreground">
                     {metric.value}
                   </div>
@@ -162,7 +176,7 @@ export function ReportCard({
           {/* Action button for non-link cards */}
           {!to && !disabled && (
             <Button
-              variant={variant === 'featured' ? 'default' : 'outline'}
+              variant={variant === "featured" ? "default" : "outline"}
               className="w-full"
               onClick={onClick}
             >
@@ -209,7 +223,7 @@ export function ReportCard({
   // Wrap in Link if 'to' prop is provided
   if (to && !disabled) {
     return (
-      <Link to={to} className="block">
+      <Link prefetch="intent" to={to} className="block">
         {cardContent}
       </Link>
     );
@@ -224,7 +238,7 @@ export function ReportCard({
 export function ReportCardGrid({
   children,
   columns = 3,
-  className
+  className,
 }: {
   children: React.ReactNode;
   columns?: 1 | 2 | 3 | 4;

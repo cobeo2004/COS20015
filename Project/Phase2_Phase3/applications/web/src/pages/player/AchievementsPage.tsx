@@ -21,7 +21,9 @@ import { usePlayerAchievements } from "@/hooks/usePlayerAchievements";
 
 export default function AchievementsPage() {
   const { playerId } = useParams<{ playerId: string }>();
-  const { data: achievementsData, isLoading } = usePlayerAchievements(playerId || "");
+  const { data: achievementsData, isLoading } = usePlayerAchievements(
+    playerId || ""
+  );
 
   const achievements = {
     unlocked: achievementsData?.unlocked || [],
@@ -52,7 +54,7 @@ export default function AchievementsPage() {
       {/* Header */}
       <div className="border-b">
         <div className="container mx-auto px-6 py-8">
-          <Link to={`/player/${playerId}`}>
+          <Link prefetch="intent" to={`/player/${playerId}`}>
             <Button variant="ghost" size="sm" className="mb-4">
               <RiArrowLeftLine className="h-4 w-4 mr-2" />
               Back to Dashboard
@@ -99,7 +101,9 @@ export default function AchievementsPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-sm font-medium">Unlocked</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Unlocked
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold">
@@ -193,7 +197,9 @@ export default function AchievementsPage() {
                           </CardHeader>
                           <CardContent>
                             <div className="flex items-center justify-between">
-                              <Badge className={getRarityColor(achievement.rarity)}>
+                              <Badge
+                                className={getRarityColor(achievement.rarity)}
+                              >
                                 {achievement.rarity}
                               </Badge>
                               <span className="text-sm font-semibold">
@@ -232,7 +238,9 @@ export default function AchievementsPage() {
                           </CardHeader>
                           <CardContent>
                             <div className="flex items-center justify-between">
-                              <Badge className={getRarityColor(achievement.rarity)}>
+                              <Badge
+                                className={getRarityColor(achievement.rarity)}
+                              >
                                 {achievement.rarity}
                               </Badge>
                               <span className="text-sm font-semibold">
@@ -247,15 +255,18 @@ export default function AchievementsPage() {
                 )}
 
                 {/* Empty State */}
-                {achievements.unlocked.length === 0 && achievements.locked.length === 0 && (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <RiTrophyLine className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg font-medium mb-2">No Achievements</p>
-                    <p className="text-sm">
-                      Start playing games to unlock achievements
-                    </p>
-                  </div>
-                )}
+                {achievements.unlocked.length === 0 &&
+                  achievements.locked.length === 0 && (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <RiTrophyLine className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                      <p className="text-lg font-medium mb-2">
+                        No Achievements
+                      </p>
+                      <p className="text-sm">
+                        Start playing games to unlock achievements
+                      </p>
+                    </div>
+                  )}
               </>
             )}
           </TabsContent>
@@ -301,7 +312,9 @@ export default function AchievementsPage() {
                       <CardTitle className="text-lg">
                         {achievement.name}
                       </CardTitle>
-                      <CardDescription>{achievement.description}</CardDescription>
+                      <CardDescription>
+                        {achievement.description}
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between">
@@ -322,7 +335,9 @@ export default function AchievementsPage() {
             ) : (
               <div className="text-center py-12 text-muted-foreground">
                 <RiTrophyLine className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                <p className="text-lg font-medium mb-2">No Unlocked Achievements</p>
+                <p className="text-lg font-medium mb-2">
+                  No Unlocked Achievements
+                </p>
                 <p className="text-sm">
                   Start playing games to unlock achievements
                 </p>
@@ -366,7 +381,9 @@ export default function AchievementsPage() {
                       <CardTitle className="text-lg">
                         {achievement.name}
                       </CardTitle>
-                      <CardDescription>{achievement.description}</CardDescription>
+                      <CardDescription>
+                        {achievement.description}
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between">
@@ -384,7 +401,9 @@ export default function AchievementsPage() {
             ) : (
               <div className="text-center py-12 text-muted-foreground">
                 <RiLockLine className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                <p className="text-lg font-medium mb-2">All Achievements Unlocked!</p>
+                <p className="text-lg font-medium mb-2">
+                  All Achievements Unlocked!
+                </p>
                 <p className="text-sm">
                   Great job! You've unlocked all available achievements
                 </p>

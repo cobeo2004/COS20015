@@ -105,7 +105,7 @@ export function ReportLayout({
             <HeaderSkeleton />
           ) : (
             <>
-              <Link to={backTo}>
+              <Link prefetch="intent" to={backTo}>
                 <Button variant="ghost" size="sm" className="mb-4">
                   <RiArrowLeftLine className="h-4 w-4 mr-2" />
                   {backText}

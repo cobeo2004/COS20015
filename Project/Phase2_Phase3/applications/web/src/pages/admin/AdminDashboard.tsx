@@ -1,51 +1,71 @@
 import { Link } from "react-router";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { RiBarChartBoxLine, RiGroupLine, RiGamepadLine, RiLineChartLine, RiFileTextLine, RiMoneyDollarCircleLine } from "@remixicon/react";
-import { useAdminDashboardMetrics, useRecentActivity } from "@/hooks/useAdminDashboardMetrics";
+import {
+  RiBarChartBoxLine,
+  RiGroupLine,
+  RiGamepadLine,
+  RiLineChartLine,
+  RiFileTextLine,
+  RiMoneyDollarCircleLine,
+} from "@remixicon/react";
+import {
+  useAdminDashboardMetrics,
+  useRecentActivity,
+} from "@/hooks/useAdminDashboardMetrics";
 
 export default function AdminDashboard() {
-  const { data: metricsData, isLoading: metricsLoading } = useAdminDashboardMetrics();
-  const { data: activityData, isLoading: activityLoading } = useRecentActivity();
+  const { data: metricsData, isLoading: metricsLoading } =
+    useAdminDashboardMetrics();
+  const { data: activityData, isLoading: activityLoading } =
+    useRecentActivity();
 
-  const metrics = metricsData ? [
-    {
-      title: "Total Players",
-      value: metricsData.totalPlayers.toLocaleString(),
-      change: "+12%",
-      trend: "up",
-      icon: RiGroupLine,
-      color: "text-blue-600",
-      bgColor: "bg-blue-100",
-    },
-    {
-      title: "Active Games",
-      value: metricsData.activeGames.toString(),
-      change: "+3",
-      trend: "up",
-      icon: RiGamepadLine,
-      color: "text-purple-600",
-      bgColor: "bg-purple-100",
-    },
-    {
-      title: "Total Revenue",
-      value: `$${metricsData.totalRevenue.toLocaleString()}`,
-      change: "+23%",
-      trend: "up",
-      icon: RiMoneyDollarCircleLine,
-      color: "text-green-600",
-      bgColor: "bg-green-100",
-    },
-    {
-      title: "Engagement Rate",
-      value: `${metricsData.engagementRate.toFixed(1)}%`,
-      change: "+5.2%",
-      trend: "up",
-      icon: RiLineChartLine,
-      color: "text-orange-600",
-      bgColor: "bg-orange-100",
-    },
-  ] : [];
+  const metrics = metricsData
+    ? [
+        {
+          title: "Total Players",
+          value: metricsData.totalPlayers.toLocaleString(),
+          change: "+12%",
+          trend: "up",
+          icon: RiGroupLine,
+          color: "text-blue-600",
+          bgColor: "bg-blue-100",
+        },
+        {
+          title: "Active Games",
+          value: metricsData.activeGames.toString(),
+          change: "+3",
+          trend: "up",
+          icon: RiGamepadLine,
+          color: "text-purple-600",
+          bgColor: "bg-purple-100",
+        },
+        {
+          title: "Total Revenue",
+          value: `$${metricsData.totalRevenue.toLocaleString()}`,
+          change: "+23%",
+          trend: "up",
+          icon: RiMoneyDollarCircleLine,
+          color: "text-green-600",
+          bgColor: "bg-green-100",
+        },
+        {
+          title: "Engagement Rate",
+          value: `${metricsData.engagementRate.toFixed(1)}%`,
+          change: "+5.2%",
+          trend: "up",
+          icon: RiLineChartLine,
+          color: "text-orange-600",
+          bgColor: "bg-orange-100",
+        },
+      ]
+    : [];
 
   const recentActivity = activityData || [];
 
@@ -61,8 +81,11 @@ export default function AdminDashboard() {
                 Welcome back! Here's what's happening with your platform.
               </p>
             </div>
-            <Link to="/">
-              <Badge variant="outline" className="cursor-pointer hover:bg-muted">
+            <Link prefetch="intent" to="/">
+              <Badge
+                variant="outline"
+                className="cursor-pointer hover:bg-muted"
+              >
                 Switch Role
               </Badge>
             </Link>
@@ -137,12 +160,15 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent className="space-y-3">
               <Link
+                prefetch="intent"
                 to="/admin/reports/1"
                 className="block p-4 rounded-lg border hover:bg-muted transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-semibold">Game Performance Analytics</h3>
+                    <h3 className="font-semibold">
+                      Game Performance Analytics
+                    </h3>
                     <p className="text-sm text-muted-foreground">
                       Revenue, playtime, and player engagement
                     </p>
@@ -152,12 +178,15 @@ export default function AdminDashboard() {
               </Link>
 
               <Link
+                prefetch="intent"
                 to="/admin/reports/2"
                 className="block p-4 rounded-lg border hover:bg-muted transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-semibold">Player Engagement Analysis</h3>
+                    <h3 className="font-semibold">
+                      Player Engagement Analysis
+                    </h3>
                     <p className="text-sm text-muted-foreground">
                       Session duration, retention, and activity
                     </p>
@@ -167,12 +196,15 @@ export default function AdminDashboard() {
               </Link>
 
               <Link
+                prefetch="intent"
                 to="/admin/reports/3"
                 className="block p-4 rounded-lg border hover:bg-muted transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-semibold">Developer Success Dashboard</h3>
+                    <h3 className="font-semibold">
+                      Developer Success Dashboard
+                    </h3>
                     <p className="text-sm text-muted-foreground">
                       Studio performance and game statistics
                     </p>
@@ -182,6 +214,7 @@ export default function AdminDashboard() {
               </Link>
 
               <Link
+                prefetch="intent"
                 to="/admin/reports"
                 className="block text-center p-2 text-sm text-primary hover:underline"
               >
@@ -194,7 +227,9 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>Latest platform events and updates</CardDescription>
+              <CardDescription>
+                Latest platform events and updates
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">

@@ -14,7 +14,7 @@ export default function PlayerSelectorPage() {
       {/* Header */}
       <div className="border-b">
         <div className="container mx-auto px-6 py-8">
-          <Link to="/">
+          <Link prefetch="intent" to="/">
             <Button variant="ghost" size="sm" className="mb-4">
               <RiArrowLeftLine className="h-4 w-4 mr-2" />
               Back to Role Selection
@@ -67,7 +67,11 @@ export default function PlayerSelectorPage() {
             ))
           ) : players && players.length > 0 ? (
             players.map((player) => (
-              <Link key={player.id} to={`/player/${player.id}`}>
+              <Link
+                prefetch="intent"
+                key={player.id}
+                to={`/player/${player.id}`}
+              >
                 <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer">
                   <CardHeader>
                     <div className="flex items-center gap-4">

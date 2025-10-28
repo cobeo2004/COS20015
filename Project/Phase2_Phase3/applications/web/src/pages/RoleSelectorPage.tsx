@@ -1,11 +1,16 @@
 import { Link } from "react-router";
-import { RiShieldLine, RiGamepadLine, RiArrowRightLine } from "@remixicon/react";
+import {
+  RiShieldLine,
+  RiGamepadLine,
+  RiArrowRightLine,
+} from "@remixicon/react";
 
 export default function RoleSelectorPage() {
   return (
     <div className="h-screen w-full flex">
       {/* Admin Panel - Left Side */}
       <Link
+        prefetch="intent"
         to="/admin"
         className="group relative flex-1 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 flex flex-col items-center justify-center overflow-hidden transition-all duration-500 hover:flex-[1.1]"
       >
@@ -26,7 +31,8 @@ export default function RoleSelectorPage() {
               Admin
             </h1>
             <p className="text-xl text-blue-100 max-w-md mb-8">
-              Manage the platform, view analytics, and generate comprehensive reports
+              Manage the platform, view analytics, and generate comprehensive
+              reports
             </p>
 
             <div className="inline-flex items-center gap-2 text-lg font-medium opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
@@ -49,6 +55,7 @@ export default function RoleSelectorPage() {
 
       {/* Player Panel - Right Side */}
       <Link
+        prefetch="intent"
         to="/player/select"
         className="group relative flex-1 bg-gradient-to-br from-purple-600 via-purple-700 to-pink-800 flex flex-col items-center justify-center overflow-hidden transition-all duration-500 hover:flex-[1.1]"
       >

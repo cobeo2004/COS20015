@@ -72,7 +72,7 @@ export default function ReportsPage() {
       {/* Header */}
       <div className="border-b">
         <div className="container mx-auto px-6 py-8">
-          <Link to="/admin">
+          <Link prefetch="intent" to="/admin">
             <Button variant="ghost" size="sm" className="mb-4">
               <RiArrowLeftLine className="h-4 w-4 mr-2" />
               Back to Dashboard
@@ -144,6 +144,7 @@ export default function ReportsPage() {
                     {/* Actions */}
                     <div className="flex gap-3 pt-2">
                       <Link
+                        prefetch="intent"
                         to={`/admin/reports/${report.id}`}
                         className="flex-1"
                       >

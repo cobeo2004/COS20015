@@ -109,7 +109,7 @@ export default function PlayerDashboard() {
                 </>
               ) : null}
             </div>
-            <Link to="/">
+            <Link prefetch="intent" to="/">
               <Badge
                 variant="outline"
                 className="cursor-pointer hover:bg-white/10 border-white/30 text-white"
@@ -230,6 +230,7 @@ export default function PlayerDashboard() {
                     ))}
                   </div>
                   <Link
+                    prefetch="intent"
                     to={`/player/${playerId}/achievements`}
                     className="block text-center mt-4 text-sm text-primary hover:underline"
                   >
@@ -299,6 +300,7 @@ export default function PlayerDashboard() {
                     ))}
                   </div>
                   <Link
+                    prefetch="intent"
                     to={`/player/${playerId}/games`}
                     className="block text-center mt-4 text-sm text-primary hover:underline"
                   >

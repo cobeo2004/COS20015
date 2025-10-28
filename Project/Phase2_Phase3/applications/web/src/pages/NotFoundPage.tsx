@@ -17,22 +17,21 @@ export default function NotFoundPage() {
               404
             </h1>
 
-            <h2 className="text-2xl font-semibold mb-3">
-              Page Not Found
-            </h2>
+            <h2 className="text-2xl font-semibold mb-3">Page Not Found</h2>
 
             <p className="text-muted-foreground mb-8">
-              Sorry, we couldn't find the page you're looking for. It might have been moved or doesn't exist.
+              Sorry, we couldn't find the page you're looking for. It might have
+              been moved or doesn't exist.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link to="/">
+              <Link prefetch="intent" to="/">
                 <Button className="w-full sm:w-auto">
                   <RiHomeLine className="h-4 w-4 mr-2" />
                   Back to Home
                 </Button>
               </Link>
-              <Link to="/admin">
+              <Link prefetch="intent" to="/admin">
                 <Button variant="outline" className="w-full sm:w-auto">
                   Admin Dashboard
                 </Button>
