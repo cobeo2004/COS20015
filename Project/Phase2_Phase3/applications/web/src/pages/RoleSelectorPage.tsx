@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   RiShieldLine,
   RiGamepadLine,
@@ -6,12 +7,21 @@ import {
 } from "@remixicon/react";
 
 export default function RoleSelectorPage() {
+  const { user, isAdmin, loading } = useAuth();
+
+  console.log("RoleSelectorPage:", { user: user?.email, isAdmin, loading });
+
+  // If user is already logged in as admin, redirect to admin dashboard
+  if (user && isAdmin && !loading) {
+    console.log("Redirecting to admin dashboard");
+  }
+
   return (
     <div className="h-screen w-full flex">
       {/* Admin Panel - Left Side */}
       <Link
         prefetch="intent"
-        to="/admin"
+        to="/admin/login"
         className="group relative flex-1 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 flex flex-col items-center justify-center overflow-hidden transition-all duration-500 hover:flex-[1.1]"
       >
         {/* Background Pattern */}

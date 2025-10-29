@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { AdminHeader } from "@/components/AdminHeader";
 import {
   RiBarChartBoxLine,
   RiGroupLine,
@@ -73,27 +73,10 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b">
-        <div className="container mx-auto px-6 py-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold mb-2">Admin Dashboard</h1>
-              <p className="text-muted-foreground">
-                Welcome back! Here's what's happening with your platform.
-              </p>
-            </div>
-            <Link prefetch="intent" to="/">
-              <Badge
-                variant="outline"
-                className="cursor-pointer hover:bg-muted"
-              >
-                Switch Role
-              </Badge>
-            </Link>
-          </div>
-        </div>
-      </div>
+      <AdminHeader
+        title="Admin Dashboard"
+        subtitle="Welcome back! Here's what's happening with your platform."
+      />
 
       {/* Main Content */}
       <div className="container mx-auto px-6 py-8">
