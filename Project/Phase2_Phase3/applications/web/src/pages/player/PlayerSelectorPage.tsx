@@ -1,13 +1,76 @@
+import { useState, useMemo } from "react";
 import { Link } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { RiArrowLeftLine, RiUserLine, RiStarFill } from "@remixicon/react";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import {
+  RiArrowLeftLine,
+  RiUserLine,
+  RiStarFill,
+  RiSearchLine,
+  RiFilter3Line,
+  RiCloseLine,
+  RiArrowUpLine,
+  RiArrowDownLine
+} from "@remixicon/react";
 import { usePlayers } from "@/hooks/usePlayers";
+import type { PlayerFilters } from "@/lib/repositories/players";
+
+const COUNTRIES = [
+  { value: "AU", label: "Australia" },
+  { value: "US", label: "United States" },
+  { value: "UK", label: "United Kingdom" },
+  { value: "JP", label: "Japan" },
+  { value: "VN", label: "Vietnam" }
+];
+
+const SORT_OPTIONS = [
+  { value: "total_score", label: "Total Score" },
+  { value: "username", label: "Username" },
+  { value: "level", label: "Level" },
+  { value: "country", label: "Country" }
+];
 
 export default function PlayerSelectorPage() {
-  const { data: players, isLoading } = usePlayers();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filters, setFilters] = useState<PlayerFilters>({});
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Debounced search implementation
+  const debouncedFilters = useMemo(() => {
+    const newFilters = { ...filters };
+    if (searchTerm.trim()) {
+      newFilters.searchTerm = searchTerm;
+    } else {
+      delete newFilters.searchTerm;
+    }
+    return newFilters;
+  }, [searchTerm, filters]);
+
+  const { data: players, isLoading } = usePlayers(debouncedFilters);
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setFilters({});
+  };
+
+  const hasActiveFilters = Object.keys(filters).length > 0 || searchTerm.trim() !== "";
+
+  const updateFilter = (key: keyof PlayerFilters, value: string | number | undefined) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+  };
+
+  const removeFilter = (key: keyof PlayerFilters) => {
+    setFilters(prev => {
+      const newFilters = { ...prev };
+      delete newFilters[key];
+      return newFilters;
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -34,6 +97,204 @@ export default function PlayerSelectorPage() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* Search and Filters */}
+      <div className="container mx-auto px-6 py-6">
+        <div className="flex gap-4 mb-4">
+          <div className="relative flex-1">
+            <RiSearchLine className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search players by username or email..."
+              className="pl-10"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <Button
+            variant="outline"
+            onClick={() => setShowFilters(!showFilters)}
+            className={showFilters ? "bg-muted" : ""}
+          >
+            <RiFilter3Line className="h-4 w-4 mr-2" />
+            Filters
+          </Button>
+          {hasActiveFilters && (
+            <Button variant="ghost" onClick={clearFilters}>
+              <RiCloseLine className="h-4 w-4 mr-2" />
+              Clear
+            </Button>
+          )}
+        </div>
+
+        {/* Active Filters */}
+        {hasActiveFilters && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {searchTerm && (
+              <Badge variant="secondary" className="flex items-center gap-1">
+                Search: "{searchTerm}"
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0 hover:bg-transparent"
+                  onClick={() => setSearchTerm("")}
+                >
+                  <RiCloseLine className="h-3 w-3" />
+                </Button>
+              </Badge>
+            )}
+            {filters.country && (
+              <Badge variant="secondary" className="flex items-center gap-1">
+                Country: {COUNTRIES.find(c => c.value === filters.country)?.label || filters.country}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0 hover:bg-transparent"
+                  onClick={() => removeFilter("country")}
+                >
+                  <RiCloseLine className="h-3 w-3" />
+                </Button>
+              </Badge>
+            )}
+            {filters.minLevel && (
+              <Badge variant="secondary" className="flex items-center gap-1">
+                Level: {filters.minLevel}+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0 hover:bg-transparent"
+                  onClick={() => removeFilter("minLevel")}
+                >
+                  <RiCloseLine className="h-3 w-3" />
+                </Button>
+              </Badge>
+            )}
+            {filters.minScore && (
+              <Badge variant="secondary" className="flex items-center gap-1">
+                Score: {filters.minScore.toLocaleString()}+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0 hover:bg-transparent"
+                  onClick={() => removeFilter("minScore")}
+                >
+                  <RiCloseLine className="h-3 w-3" />
+                </Button>
+              </Badge>
+            )}
+            {filters.sortBy && (
+              <Badge variant="secondary" className="flex items-center gap-1">
+                Sort: {SORT_OPTIONS.find(s => s.value === filters.sortBy)?.label}
+                {filters.sortOrder === "asc" ? (
+                  <RiArrowUpLine className="h-3 w-3" />
+                ) : (
+                  <RiArrowDownLine className="h-3 w-3" />
+                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0 hover:bg-transparent"
+                  onClick={() => {
+                    removeFilter("sortBy");
+                    removeFilter("sortOrder");
+                  }}
+                >
+                  <RiCloseLine className="h-3 w-3" />
+                </Button>
+              </Badge>
+            )}
+          </div>
+        )}
+
+        {/* Filter Panel */}
+        {showFilters && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-lg">Filter Options</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <div>
+                  <Label htmlFor="country">Country</Label>
+                  <Select
+                    value={filters.country || undefined}
+                    onValueChange={(value) => updateFilter("country", value === "all" ? undefined : value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="All countries" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All countries</SelectItem>
+                      {COUNTRIES.map((country) => (
+                        <SelectItem key={country.value} value={country.value}>
+                          {country.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="minLevel">Min Level</Label>
+                  <Input
+                    id="minLevel"
+                    type="number"
+                    min="1"
+                    max="100"
+                    placeholder="1"
+                    value={filters.minLevel || ""}
+                    onChange={(e) => updateFilter("minLevel", e.target.value ? parseInt(e.target.value) : undefined)}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="minScore">Min Score</Label>
+                  <Input
+                    id="minScore"
+                    type="number"
+                    min="0"
+                    placeholder="0"
+                    value={filters.minScore || ""}
+                    onChange={(e) => updateFilter("minScore", e.target.value ? parseInt(e.target.value) : undefined)}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="sortBy">Sort By</Label>
+                  <div className="flex gap-2">
+                    <Select
+                      value={filters.sortBy || undefined}
+                      onValueChange={(value) => updateFilter("sortBy", value || undefined)}
+                    >
+                      <SelectTrigger className="flex-1">
+                        <SelectValue placeholder="Sort by..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SORT_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => updateFilter("sortOrder", filters.sortOrder === "asc" ? "desc" : "asc")}
+                      disabled={!filters.sortBy}
+                    >
+                      {filters.sortOrder === "asc" ? (
+                        <RiArrowUpLine className="h-4 w-4" />
+                      ) : (
+                        <RiArrowDownLine className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Content */}

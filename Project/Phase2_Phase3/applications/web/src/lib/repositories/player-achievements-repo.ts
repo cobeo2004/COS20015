@@ -8,6 +8,13 @@ export interface Achievement {
   rarity: string;
 }
 
+export interface AchievementFilters {
+  searchTerm?: string;
+  rarity?: string;
+  sortBy?: "name" | "points" | "rarity";
+  sortOrder?: "asc" | "desc";
+}
+
 export interface UnlockedAchievement extends Achievement {
   unlockedAt: string;
 }
@@ -27,7 +34,7 @@ export class PlayerAchievementsRepository {
   /**
    * Get player achievements data
    */
-  static async getPlayerAchievements(playerId: string): Promise<PlayerAchievementsData> {
+  static async getPlayerAchievements(playerId: string, filters?: AchievementFilters): Promise<PlayerAchievementsData> {
     // Fetch all achievements
     const { data: allAchievements, error: achievementsError } = await supabase
       .from("achievements")
@@ -54,8 +61,8 @@ export class PlayerAchievementsRepository {
     const unlockedIds = new Set(playerAchievements?.map(pa => pa.achievement_id) || []);
 
     // Categorize achievements
-    const unlocked: UnlockedAchievement[] = [];
-    const locked: LockedAchievement[] = [];
+    let unlocked: UnlockedAchievement[] = [];
+    let locked: LockedAchievement[] = [];
     let totalPoints = 0;
 
     allAchievements?.forEach(achievement => {
@@ -83,6 +90,90 @@ export class PlayerAchievementsRepository {
         });
       }
     });
+
+    // Apply filters
+    if (filters) {
+      if (filters.searchTerm) {
+        const searchLower = filters.searchTerm.toLowerCase();
+        const filterUnlocked = (achievements: UnlockedAchievement[]) =>
+          achievements.filter(achievement =>
+            achievement.name.toLowerCase().includes(searchLower) ||
+            achievement.description.toLowerCase().includes(searchLower)
+          );
+
+        const filterLocked = (achievements: LockedAchievement[]) =>
+          achievements.filter(achievement =>
+            achievement.name.toLowerCase().includes(searchLower) ||
+            achievement.description.toLowerCase().includes(searchLower)
+          );
+
+        unlocked = filterUnlocked(unlocked);
+        locked = filterLocked(locked);
+      }
+
+      if (filters.rarity) {
+        const filterUnlocked = (achievements: UnlockedAchievement[]) =>
+          achievements.filter(achievement => achievement.rarity === filters.rarity);
+
+        const filterLocked = (achievements: LockedAchievement[]) =>
+          achievements.filter(achievement => achievement.rarity === filters.rarity);
+
+        unlocked = filterUnlocked(unlocked);
+        locked = filterLocked(locked);
+      }
+
+      // Apply sorting
+      const sortUnlocked = (achievements: UnlockedAchievement[]) => {
+        if (!filters.sortBy) return achievements;
+
+        return [...achievements].sort((a, b) => {
+          let comparison = 0;
+
+          switch (filters.sortBy) {
+            case "name":
+              comparison = a.name.localeCompare(b.name);
+              break;
+            case "points":
+              comparison = a.points - b.points;
+              break;
+            case "rarity":
+              const rarityOrder = { 'Legendary': 4, 'Epic': 3, 'Rare': 2, 'Common': 1 };
+              comparison = (rarityOrder[a.rarity as keyof typeof rarityOrder] || 0) -
+                           (rarityOrder[b.rarity as keyof typeof rarityOrder] || 0);
+              break;
+          }
+
+          return filters.sortOrder === "asc" ? comparison : -comparison;
+        });
+      };
+
+      const sortLocked = (achievements: LockedAchievement[]) => {
+        if (!filters.sortBy) return achievements;
+
+        return [...achievements].sort((a, b) => {
+          let comparison = 0;
+
+          switch (filters.sortBy) {
+            case "name":
+              comparison = a.name.localeCompare(b.name);
+              break;
+            case "points":
+              comparison = a.points - b.points;
+              break;
+            case "rarity":
+              const rarityOrder = { 'Legendary': 4, 'Epic': 3, 'Rare': 2, 'Common': 1 };
+              comparison = (rarityOrder[a.rarity as keyof typeof rarityOrder] || 0) -
+                           (rarityOrder[b.rarity as keyof typeof rarityOrder] || 0);
+              break;
+          }
+
+          return filters.sortOrder === "asc" ? comparison : -comparison;
+        });
+      };
+
+      unlocked = sortUnlocked(unlocked);
+      locked = sortLocked(locked);
+    }
 
     const totalAchievements = allAchievements?.length || 0;
     const completionPercentage = totalAchievements > 0
