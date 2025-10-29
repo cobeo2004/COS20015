@@ -14,6 +14,8 @@ import {
   RiLineChartLine,
   RiFileTextLine,
   RiMoneyDollarCircleLine,
+  RiSettings3Line,
+  RiTrophyLine,
 } from "@remixicon/react";
 import {
   useAdminDashboardMetrics,
@@ -144,6 +146,70 @@ export default function AdminDashboard() {
             </div>
           )}
         </div>
+
+        {/* CRUD Management */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <RiSettings3Line className="h-5 w-5" />
+              Platform Management
+            </CardTitle>
+            <CardDescription>
+              Manage games, players, and achievements on your platform
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-3">
+              <Link
+                prefetch="intent"
+                to="/admin/games"
+                className="block p-4 rounded-lg border hover:bg-muted transition-colors"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900">
+                    <RiGamepadLine className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  </div>
+                </div>
+                <h3 className="font-semibold mb-1">Games Management</h3>
+                <p className="text-sm text-muted-foreground">
+                  Add, edit, and manage games, pricing, and developer information
+                </p>
+              </Link>
+
+              <Link
+                prefetch="intent"
+                to="/admin/players"
+                className="block p-4 rounded-lg border hover:bg-muted transition-colors"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900">
+                    <RiGroupLine className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                </div>
+                <h3 className="font-semibold mb-1">Players Management</h3>
+                <p className="text-sm text-muted-foreground">
+                  Manage player accounts, statistics, and user information
+                </p>
+              </Link>
+
+              <Link
+                prefetch="intent"
+                to="/admin/achievements"
+                className="block p-4 rounded-lg border hover:bg-muted transition-colors"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="p-2 rounded-lg bg-yellow-100 dark:bg-yellow-900">
+                    <RiTrophyLine className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                  </div>
+                </div>
+                <h3 className="font-semibold mb-1">Achievements Management</h3>
+                <p className="text-sm text-muted-foreground">
+                  Create and manage achievements, unlock criteria, and rewards
+                </p>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Reports and Activity */}
         <div className="grid gap-6 lg:grid-cols-2">

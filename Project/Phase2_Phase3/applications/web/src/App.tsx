@@ -12,6 +12,9 @@ const ReportsPage = lazy(() => import("./pages/admin/ReportsPage"));
 const Report1Page = lazy(() => import("./pages/admin/Report1Page"));
 const Report2Page = lazy(() => import("./pages/admin/Report2Page"));
 const Report3Page = lazy(() => import("./pages/admin/Report3Page"));
+const GamesManagementPage = lazy(() => import("./pages/admin/GamesManagementPage"));
+const PlayersManagementPage = lazy(() => import("./pages/admin/PlayersManagementPage"));
+const AchievementsManagementPage = lazy(() => import("./pages/admin/AchievementsManagementPage"));
 
 // Player pages
 const PlayerSelectorPage = lazy(
@@ -76,6 +79,30 @@ function App() {
         element={
           <Suspense fallback={<LoadingState fullScreen={true} />}>
             <Report3Page />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/admin/games"
+        element={
+          <Suspense fallback={<LoadingState fullScreen={true} />}>
+            <GamesManagementPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/admin/players"
+        element={
+          <Suspense fallback={<LoadingState fullScreen={true} />}>
+            <PlayersManagementPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/admin/achievements"
+        element={
+          <Suspense fallback={<LoadingState fullScreen={true} />}>
+            <AchievementsManagementPage />
           </Suspense>
         }
       />
