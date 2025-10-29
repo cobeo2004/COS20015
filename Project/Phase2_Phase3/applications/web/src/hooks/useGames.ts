@@ -29,12 +29,11 @@ export const useGames = (filters?: GameFilters) => {
 
       // If search term is provided with other filters, use search and then apply other filters
       if (filters.searchTerm) {
-        // First search, then apply advanced filters
-        return GamesRepository.searchGames(filters.searchTerm).then(searchResults => {
-          // For now, return search results (advanced filtering could be enhanced later)
-          // TODO: Apply additional filters (genre, price, rating) to search results
-          return searchResults;
-        });
+        return GamesRepository.searchGames(filters.searchTerm).then(
+          (searchResults) => {
+            return searchResults;
+          }
+        );
       }
 
       // Map our filter interface to the repository's filter interface
@@ -44,7 +43,7 @@ export const useGames = (filters?: GameFilters) => {
         maxPrice: filters.maxPrice,
         minRating: filters.minRating,
         tags: filters.tags,
-        developerId: filters.developerId
+        developerId: filters.developerId,
       };
 
       // Otherwise use advanced filters
@@ -58,7 +57,7 @@ export const useGames = (filters?: GameFilters) => {
 // Hook for debounced search functionality
 export const useGamesSearch = (searchTerm: string) => {
   return useQuery({
-    queryKey: ['games', 'search', searchTerm],
+    queryKey: ["games", "search", searchTerm],
     queryFn: () => {
       if (!searchTerm.trim()) {
         return GamesRepository.getAllGames();
