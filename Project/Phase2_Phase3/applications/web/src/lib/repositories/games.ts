@@ -352,4 +352,26 @@ export class GamesRepository {
     }
     return data;
   }
+
+  /**
+   * Search games by title, genre, or other text fields
+   * @param searchTerm - The search term to filter by
+   */
+  static async searchGames(searchTerm: string) {
+    if (!searchTerm.trim()) {
+      return this.getAllGames();
+    }
+
+    // Search only by title to avoid enum casting issues with PostgREST
+    const { data, error } = await supabase
+      .from("games")
+      .select("*")
+      .ilike("title", `%${searchTerm}%`)
+      .order("title", { ascending: true });
+
+    if (error) {
+      throw new Error(`Failed to search games: ${error.message}`);
+    }
+    return data;
+  }
 }

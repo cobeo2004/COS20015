@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 import { Link } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -40,16 +41,19 @@ export default function PlayerSelectorPage() {
   const [filters, setFilters] = useState<PlayerFilters>({});
   const [showFilters, setShowFilters] = useState(false);
 
-  // Debounced search implementation
+  // Debounced search implementation (300ms delay)
+  const debouncedSearchTerm = useDebounce(searchTerm.trim(), 300);
+
+  // Debounced filters implementation
   const debouncedFilters = useMemo(() => {
     const newFilters = { ...filters };
-    if (searchTerm.trim()) {
-      newFilters.searchTerm = searchTerm;
+    if (debouncedSearchTerm) {
+      newFilters.searchTerm = debouncedSearchTerm;
     } else {
       delete newFilters.searchTerm;
     }
     return newFilters;
-  }, [searchTerm, filters]);
+  }, [debouncedSearchTerm, filters]);
 
   const { data: players, isLoading } = usePlayers(debouncedFilters);
 

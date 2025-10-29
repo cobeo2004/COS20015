@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useParams, Link } from "react-router";
 import {
   Card,
@@ -48,16 +49,19 @@ export default function AchievementsPage() {
   const [filters, setFilters] = useState<AchievementFilters>({});
   const [showFilters, setShowFilters] = useState(false);
 
-  // Debounced search implementation
+  // Debounced search implementation (300ms delay)
+  const debouncedSearchTerm = useDebounce(searchTerm.trim(), 300);
+
+  // Debounced filters implementation
   const debouncedFilters = useMemo(() => {
     const newFilters = { ...filters };
-    if (searchTerm.trim()) {
-      newFilters.searchTerm = searchTerm;
+    if (debouncedSearchTerm) {
+      newFilters.searchTerm = debouncedSearchTerm;
     } else {
       delete newFilters.searchTerm;
     }
     return newFilters;
-  }, [searchTerm, filters]);
+  }, [debouncedSearchTerm, filters]);
 
   const { data: achievementsData, isLoading } = usePlayerAchievements(
     playerId || "",

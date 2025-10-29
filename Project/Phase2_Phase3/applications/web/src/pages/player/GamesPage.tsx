@@ -20,10 +20,19 @@ import {
 } from "@remixicon/react";
 import { useGames } from "@/hooks/useGames";
 import type { GameMetadata } from "@/lib/types/hybrid-data";
+import { useState } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function GamesPage() {
   const { playerId } = useParams<{ playerId: string }>();
-  const { data: games, isLoading } = useGames();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Debounced search implementation (300ms delay)
+  const debouncedSearchTerm = useDebounce(searchTerm.trim(), 300);
+
+  const { data: games, isLoading } = useGames(
+    debouncedSearchTerm ? { searchTerm: debouncedSearchTerm } : undefined
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -49,7 +58,12 @@ export default function GamesPage() {
         <div className="flex gap-4 mb-8">
           <div className="relative flex-1">
             <RiSearchLine className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search games..." className="pl-10" />
+            <Input
+              placeholder="Search games..."
+              className="pl-10"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
           <Button variant="outline">
             <RiFilter3Line className="h-4 w-4 mr-2" />
@@ -109,7 +123,10 @@ export default function GamesPage() {
                       </Badge>
                     )}
                     {dlcAvailable && (
-                      <Badge variant="secondary" className="absolute top-2 right-2">
+                      <Badge
+                        variant="secondary"
+                        className="absolute top-2 right-2"
+                      >
                         <RiGiftLine className="h-3 w-3 mr-1" />
                         DLC
                       </Badge>
@@ -132,7 +149,10 @@ export default function GamesPage() {
                       <span className="text-2xl font-bold">
                         ${game.price?.toFixed(2)}
                       </span>
-                      <Link prefetch="intent" to={`/player/${playerId}/games/${game.id}`}>
+                      <Link
+                        prefetch="intent"
+                        to={`/player/${playerId}/games/${game.id}`}
+                      >
                         <Button size="sm">View Details</Button>
                       </Link>
                     </div>
