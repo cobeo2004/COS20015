@@ -12,18 +12,11 @@
  * Contains flexible company information
  */
 export interface DeveloperMetadata {
-  company_size?: 'Indie (1-10)' | 'Small (11-50)' | 'Medium (51-200)' | 'Large (200-500)' | 'Enterprise (500+)';
+  company_size?: string; // e.g., 'Medium (50-500 employees)', 'Large (500+ employees)'
   founded_year?: number;
-  headquarters?: {
-    city: string;
-    country: string;
-  };
-  specialties?: string[]; // e.g., ['RPG', 'Strategy', 'Mobile Games']
-  awards?: Array<{
-    name: string;
-    year: number;
-    category?: string;
-  }>;
+  headquarters?: string; // e.g., 'Rockville, MD, USA'
+  specialties?: string[]; // e.g., ['RPG', 'Open-world', 'Fantasy']
+  awards?: string[]; // e.g., ['Game of the Year 2011', 'Best RPG 2015']
   social_links?: {
     website?: string;
     twitter?: string;
@@ -40,17 +33,24 @@ export interface DeveloperMetadata {
 export interface GameMetadata {
   average_rating?: number; // 0-5 stars
   total_reviews?: number;
-  tags?: string[]; // e.g., ['multiplayer', 'co-op', 'indie']
+  tags?: string[]; // e.g., ['simulation', 'realistic', 'competitive', 'online']
+  screenshots?: string[]; // Array of screenshot URLs
+  reviews_summary?: {
+    positive_percentage: number;
+    negative_percentage: number;
+  };
   system_requirements?: {
-    min_ram?: string;
-    min_storage?: string;
-    recommended_ram?: string;
-    recommended_storage?: string;
+    min_ram_gb?: number;
+    min_storage_gb?: number;
+    recommended_gpu?: string;
     platforms?: string[]; // ['Windows', 'Mac', 'Linux']
   };
   content_rating?: 'E' | 'E10+' | 'T' | 'M' | 'AO'; // ESRB ratings
   languages?: string[];
   dlc_count?: number;
+  dlc_available?: boolean;
+  early_access?: boolean;
+  peak_concurrent_players?: number;
   last_updated?: string; // ISO date string
 }
 
@@ -248,11 +248,11 @@ export function isDeveloperMetadata(value: unknown): value is DeveloperMetadata 
   const meta = value as DeveloperMetadata;
 
   // Optional validation - if fields exist, they should be correct type
-  if (meta.company_size && !['Indie (1-10)', 'Small (11-50)', 'Medium (51-200)', 'Large (200-500)', 'Enterprise (500+)'].includes(meta.company_size)) {
-    return false;
-  }
+  if (meta.company_size && typeof meta.company_size !== 'string') return false;
   if (meta.founded_year && typeof meta.founded_year !== 'number') return false;
+  if (meta.headquarters && typeof meta.headquarters !== 'string') return false;
   if (meta.specialties && !Array.isArray(meta.specialties)) return false;
+  if (meta.awards && !Array.isArray(meta.awards)) return false;
 
   return true;
 }
@@ -269,6 +269,10 @@ export function isGameMetadata(value: unknown): value is GameMetadata {
   }
   if (meta.total_reviews !== undefined && typeof meta.total_reviews !== 'number') return false;
   if (meta.tags && !Array.isArray(meta.tags)) return false;
+  if (meta.screenshots && !Array.isArray(meta.screenshots)) return false;
+  if (meta.early_access !== undefined && typeof meta.early_access !== 'boolean') return false;
+  if (meta.dlc_available !== undefined && typeof meta.dlc_available !== 'boolean') return false;
+  if (meta.peak_concurrent_players !== undefined && typeof meta.peak_concurrent_players !== 'number') return false;
 
   return true;
 }

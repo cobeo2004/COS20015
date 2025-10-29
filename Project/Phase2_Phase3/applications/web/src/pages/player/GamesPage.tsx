@@ -15,8 +15,11 @@ import {
   RiFilter3Line,
   RiGamepadLine,
   RiStarFill,
+  RiFlashlightLine,
+  RiGiftLine,
 } from "@remixicon/react";
 import { useGames } from "@/hooks/useGames";
+import type { GameMetadata } from "@/lib/types/hybrid-data";
 
 export default function GamesPage() {
   const { playerId } = useParams<{ playerId: string }>();
@@ -78,38 +81,65 @@ export default function GamesPage() {
           </div>
         ) : games && games.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {games.map((game) => (
-              <Card
-                key={game.id}
-                className="overflow-hidden hover:shadow-lg transition-shadow"
-              >
-                <div className="aspect-video bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                  <img
-                    src={game.cover_image_url || undefined}
-                    className="w-full h-full"
-                    alt={game.title}
-                  />
-                </div>
-                <CardHeader>
-                  <CardTitle className="line-clamp-1">{game.title}</CardTitle>
-                  <CardDescription className="flex items-center justify-between">
-                    <Badge variant="secondary">{game.genre}</Badge>
-                    <div className="flex items-center gap-1">
-                      <RiStarFill className="h-3 w-3 fill-yellow-500 text-yellow-500" />
-                      <span className="text-sm font-medium">4.5</span>
-                    </div>
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold">
-                      ${game.price?.toFixed(2)}
-                    </span>
-                    <Button size="sm">View Details</Button>
+            {games.map((game) => {
+              const metadata = (game.metadata || {}) as GameMetadata;
+              const averageRating = metadata.average_rating || 0;
+              const earlyAccess = metadata.early_access || false;
+              const dlcAvailable = metadata.dlc_available || false;
+
+              return (
+                <Card
+                  key={game.id}
+                  className="overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                  <div className="aspect-video bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center relative">
+                    {game.cover_image_url ? (
+                      <img
+                        src={game.cover_image_url}
+                        className="w-full h-full object-cover"
+                        alt={game.title}
+                      />
+                    ) : (
+                      <RiGamepadLine className="h-16 w-16 text-white/50" />
+                    )}
+                    {earlyAccess && (
+                      <Badge className="absolute top-2 left-2 bg-blue-500">
+                        <RiFlashlightLine className="h-3 w-3 mr-1" />
+                        Early Access
+                      </Badge>
+                    )}
+                    {dlcAvailable && (
+                      <Badge variant="secondary" className="absolute top-2 right-2">
+                        <RiGiftLine className="h-3 w-3 mr-1" />
+                        DLC
+                      </Badge>
+                    )}
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                  <CardHeader>
+                    <CardTitle className="line-clamp-1">{game.title}</CardTitle>
+                    <CardDescription className="flex items-center justify-between">
+                      <Badge variant="secondary">{game.genre}</Badge>
+                      <div className="flex items-center gap-1">
+                        <RiStarFill className="h-3 w-3 fill-yellow-500 text-yellow-500" />
+                        <span className="text-sm font-medium">
+                          {averageRating > 0 ? averageRating.toFixed(1) : "N/A"}
+                        </span>
+                      </div>
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl font-bold">
+                        ${game.price?.toFixed(2)}
+                      </span>
+                      <Link prefetch="intent" to={`/player/${playerId}/games/${game.id}`}>
+                        <Button size="sm">View Details</Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         ) : (
           <Card>

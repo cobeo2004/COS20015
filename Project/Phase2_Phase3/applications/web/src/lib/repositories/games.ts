@@ -43,6 +43,32 @@ export class GamesRepository {
   }
 
   /**
+   * Get single game with developer information
+   * JOIN game with developers table
+   */
+  static async getGameWithDeveloper(id: string) {
+    const { data, error } = await supabase
+      .from("games")
+      .select(`
+        *,
+        developers (
+          id,
+          name,
+          email,
+          logo_url,
+          metadata
+        )
+      `)
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      throw new Error(`Failed to fetch game with developer: ${error.message}`);
+    }
+    return data;
+  }
+
+  /**
    * Get games with metadata parsed
    * Returns typed metadata for easier access
    */
@@ -306,6 +332,23 @@ export class GamesRepository {
 
     if (error) {
       throw new Error(`Failed to apply advanced filters: ${error.message}`);
+    }
+    return data;
+  }
+
+  /**
+   * Get all games by a specific developer
+   * @param developerId - The ID of the developer
+   */
+  static async getGamesByDeveloper(developerId: string) {
+    const { data, error } = await supabase
+      .from("games")
+      .select("*")
+      .eq("developer_id", developerId)
+      .order("release_date", { ascending: false });
+
+    if (error) {
+      throw new Error(`Failed to fetch games by developer: ${error.message}`);
     }
     return data;
   }

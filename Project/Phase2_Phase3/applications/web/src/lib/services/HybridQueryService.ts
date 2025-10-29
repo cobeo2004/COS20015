@@ -109,7 +109,7 @@ export class HybridQueryService {
               const start = new Date(s.start_time).getTime();
               const end = new Date(s.end_time).getTime();
               const durationMs = end - start;
-              return sum + (durationMs / 1000); // Convert to seconds
+              return sum + durationMs / 1000; // Convert to seconds
             }
             return sum;
           }, 0) / 3600;
@@ -242,7 +242,7 @@ export class HybridQueryService {
               const start = new Date(s.start_time).getTime();
               const end = new Date(s.end_time).getTime();
               const durationMs = end - start;
-              return sum + (durationMs / 1000); // Convert to seconds
+              return sum + durationMs / 1000; // Convert to seconds
             }
             return sum;
           }, 0) / 3600;
@@ -401,7 +401,7 @@ export class HybridQueryService {
               const start = new Date(s.start_time).getTime();
               const end = new Date(s.end_time).getTime();
               const durationMs = end - start;
-              totalPlaytimeHours += (durationMs / 1000) / 3600; // Convert to hours
+              totalPlaytimeHours += durationMs / 1000 / 3600; // Convert to hours
             }
           });
 
@@ -435,10 +435,7 @@ export class HybridQueryService {
           // Semi-structured data (JSONB)
           company_size: devMetadata?.company_size,
           founded_year: devMetadata?.founded_year,
-          headquarters:
-            devMetadata?.headquarters?.city && devMetadata.headquarters.country
-              ? `${devMetadata.headquarters.city}, ${devMetadata.headquarters.country}`
-              : undefined,
+          headquarters: devMetadata?.headquarters,
           specialties: devMetadata?.specialties,
           awards_count: devMetadata?.awards?.length,
           // Unstructured data (images)
