@@ -1,0 +1,10 @@
+ALTER TABLE "public"."players" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."player_profiles" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."achievements" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."player_achievements" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."games" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."sessions" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."leaderboards" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."leaderboard_entities" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."purchases" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."developers" ENABLE ROW LEVEL SECURITY;
