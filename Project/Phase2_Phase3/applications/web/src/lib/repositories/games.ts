@@ -374,4 +374,57 @@ export class GamesRepository {
     }
     return data;
   }
+
+  // ========== CRUD OPERATIONS ==========
+
+  /**
+   * Create a new game
+   */
+  static async createGame(gameData: Database["public"]["Tables"]["games"]["Insert"]) {
+    const { data, error } = await supabase
+      .from("games")
+      .insert(gameData)
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(`Failed to create game: ${error.message}`);
+    }
+    return data;
+  }
+
+  /**
+   * Update an existing game
+   */
+  static async updateGame(
+    id: string,
+    gameData: Database["public"]["Tables"]["games"]["Update"]
+  ) {
+    const { data, error } = await supabase
+      .from("games")
+      .update(gameData)
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(`Failed to update game: ${error.message}`);
+    }
+    return data;
+  }
+
+  /**
+   * Delete a game
+   */
+  static async deleteGame(id: string) {
+    const { error } = await supabase
+      .from("games")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      throw new Error(`Failed to delete game: ${error.message}`);
+    }
+    return true;
+  }
 }

@@ -1,4 +1,5 @@
 import { supabase } from "../supabase";
+import type { Database } from "../supabase/generated";
 
 export interface PlayerFilters {
   searchTerm?: string;
@@ -186,5 +187,58 @@ export class PlayersRepository {
       throw new Error(error.message);
     }
     return data;
+  }
+
+  // ========== CRUD OPERATIONS ==========
+
+  /**
+   * Create a new player
+   */
+  static async createPlayer(playerData: Database["public"]["Tables"]["players"]["Insert"]) {
+    const { data, error } = await supabase
+      .from("players")
+      .insert(playerData)
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(`Failed to create player: ${error.message}`);
+    }
+    return data;
+  }
+
+  /**
+   * Update an existing player
+   */
+  static async updatePlayer(
+    id: string,
+    playerData: Database["public"]["Tables"]["players"]["Update"]
+  ) {
+    const { data, error } = await supabase
+      .from("players")
+      .update(playerData)
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(`Failed to update player: ${error.message}`);
+    }
+    return data;
+  }
+
+  /**
+   * Delete a player
+   */
+  static async deletePlayer(id: string) {
+    const { error } = await supabase
+      .from("players")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      throw new Error(`Failed to delete player: ${error.message}`);
+    }
+    return true;
   }
 }
