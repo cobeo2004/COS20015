@@ -6,7 +6,18 @@ import {
   CommonMetrics,
 } from "@/components/reports/ReportMetrics";
 import { usePlayerEngagementReport } from "@/hooks/usePlayerEngagementReport";
-import { RiGroupLine, RiTrophyLine, RiTimeLine, RiStarLine } from "@remixicon/react";
+import { AvatarWithFallback } from "@/components/reports/AvatarWithFallback";
+import {
+  RiGroupLine,
+  RiTrophyLine,
+  RiTimeLine,
+  RiStarLine,
+  RiEyeLine,
+  RiNotification3Line,
+  RiShieldCheckLine,
+  RiPaletteLine,
+} from "@remixicon/react";
+import type { PlayerEngagementReport } from "@/lib/types/hybrid-data";
 
 export default function Report2Page() {
   const { data, isLoading } = usePlayerEngagementReport();
@@ -35,20 +46,24 @@ export default function Report2Page() {
 
       // Prepare export data
       const exportData = data.map((item) => ({
-        "Username": String(item.username || ""),
-        "Email": String(item.email || ""),
-        "Country": String(item.country || ""),
-        "Level": Number(item.level || 0).toString(),
+        Username: String(item.username || ""),
+        Email: String(item.email || ""),
+        Country: String(item.country || ""),
+        Level: Number(item.level || 0).toString(),
         "Total Score": Number(item.total_score || 0).toString(),
         "Total Sessions": Number(item.total_sessions || 0).toString(),
         "Playtime (hrs)": Number(item.total_playtime_hours || 0).toFixed(1),
         "Avg Session (hrs)": Number(item.avg_session_duration || 0).toFixed(2),
-        "Achievements": Number(item.achievements_unlocked || 0).toString(),
-        "Achievement Rate %": Number(item.achievement_completion_rate || 0).toFixed(1),
+        Achievements: Number(item.achievements_unlocked || 0).toString(),
+        "Achievement Rate %": Number(
+          item.achievement_completion_rate || 0
+        ).toFixed(1),
         "Retention Score": Number(item.retention_score || 0).toString(),
-        "Days Since Last Session": Number(item.days_since_last_session || 0).toString(),
-        "Privacy": String(item.privacy || "N/A"),
-        "Theme": String(item.theme || "N/A"),
+        "Days Since Last Session": Number(
+          item.days_since_last_session || 0
+        ).toString(),
+        Privacy: String(item.privacy || "N/A"),
+        Theme: String(item.theme || "N/A"),
       }));
 
       // Generate filename with current date
@@ -86,20 +101,24 @@ export default function Report2Page() {
 
       // Prepare export data - only include simple fields for PDF
       const exportData = data.map((item) => ({
-        "Username": String(item.username || ""),
-        "Country": String(item.country || ""),
-        "Level": Number(item.level || 0).toString(),
-        "Sessions": Number(item.total_sessions || 0).toString(),
+        Username: String(item.username || ""),
+        Country: String(item.country || ""),
+        Level: Number(item.level || 0).toString(),
+        Sessions: Number(item.total_sessions || 0).toString(),
         "Playtime (hrs)": Number(item.total_playtime_hours || 0).toFixed(1),
-        "Achievements": Number(item.achievements_unlocked || 0).toString(),
-        "Retention": Number(item.retention_score || 0).toString(),
+        Achievements: Number(item.achievements_unlocked || 0).toString(),
+        Retention: Number(item.retention_score || 0).toString(),
       }));
 
       // Generate filename with current date
       const date = new Date().toISOString().split("T")[0];
       const filename = `player-engagement-report-${date}`;
 
-      PDFExportService.quickExport(exportData, "Player Engagement Analysis", filename);
+      PDFExportService.quickExport(
+        exportData,
+        "Player Engagement Analysis",
+        filename
+      );
       setExportSuccess(`Successfully exported report to PDF`);
     } catch (error) {
       setExportError(
@@ -122,14 +141,14 @@ export default function Report2Page() {
             (sum, item) => sum + item.total_playtime_hours,
             0
           ),
-          avgRetentionScore: data.reduce(
-            (sum, item) => sum + item.retention_score,
-            0
-          ) / data.length,
-          avgAchievementRate: data.reduce(
-            (sum, item) => sum + item.achievement_completion_rate,
-            0
-          ) / data.length,
+          avgRetentionScore:
+            data.reduce((sum, item) => sum + item.retention_score, 0) /
+            data.length,
+          avgAchievementRate:
+            data.reduce(
+              (sum, item) => sum + item.achievement_completion_rate,
+              0
+            ) / data.length,
           totalSessions: data.reduce(
             (sum, item) => sum + item.total_sessions,
             0
@@ -181,12 +200,92 @@ export default function Report2Page() {
       ]
     : [];
 
+  // Helper functions for displaying settings
+  const getPrivacyIcon = (privacy?: string) => {
+    switch (privacy) {
+      case "public":
+        return (
+          <RiEyeLine
+            className="w-4 h-4 text-green-500"
+            xlinkTitle="Public Profile"
+          />
+        );
+      case "friends":
+        return (
+          <RiGroupLine
+            className="w-4 h-4 text-blue-500"
+            xlinkTitle="Friends Only"
+          />
+        );
+      case "private":
+        return (
+          <RiShieldCheckLine
+            className="w-4 h-4 text-gray-500"
+            xlinkTitle="Private Profile"
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  const getThemeIcon = (theme?: string) => {
+    switch (theme) {
+      case "light":
+        return (
+          <RiPaletteLine
+            className="w-4 h-4 text-yellow-500"
+            xlinkTitle="Light Theme"
+          />
+        );
+      case "dark":
+        return (
+          <RiPaletteLine
+            className="w-4 h-4 text-gray-700"
+            xlinkTitle="Dark Theme"
+          />
+        );
+      case "auto":
+        return (
+          <RiPaletteLine
+            className="w-4 h-4 text-blue-500"
+            xlinkTitle="Auto Theme"
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  const getNotificationIcon = (enabled?: boolean) => {
+    return enabled ? (
+      <RiNotification3Line
+        className="w-4 h-4 text-green-500"
+        xlinkTitle="Notifications Enabled"
+      />
+    ) : (
+      <RiNotification3Line
+        className="w-4 h-4 text-gray-400"
+        xlinkTitle="Notifications Disabled"
+      />
+    );
+  };
+
   // Table columns
   const tableColumns = [
     {
       key: "username",
-      label: "Username",
+      label: "Player",
       sortable: true,
+      render: (value: string, record: PlayerEngagementReport) => (
+        <AvatarWithFallback
+          src={record.avatar_url}
+          name={value}
+          subtitle={`Level ${record.level}`}
+          size="md"
+          showName={true}
+        />
+      ),
     },
     {
       key: "country",
@@ -194,10 +293,41 @@ export default function Report2Page() {
       sortable: true,
     },
     {
-      key: "level",
-      label: "Level",
+      key: "privacy",
+      label: "Privacy",
       sortable: true,
-      align: "right" as const,
+      render: (value: string) => (
+        <div className="flex items-center gap-2">
+          {getPrivacyIcon(value)}
+          <span className="text-xs font-medium capitalize">
+            {value || "Public"}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: "theme",
+      label: "Theme",
+      sortable: true,
+      render: (value: string) => (
+        <div className="flex items-center gap-2">
+          {getThemeIcon(value)}
+          <span className="text-xs font-medium capitalize">
+            {value || "Auto"}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: "notifications_enabled",
+      label: "Notifications",
+      sortable: true,
+      render: (value: boolean) => (
+        <div className="flex items-center gap-2">
+          {getNotificationIcon(value)}
+          <span className="text-xs font-medium">{value ? "On" : "Off"}</span>
+        </div>
+      ),
     },
     {
       key: "total_sessions",
@@ -218,14 +348,24 @@ export default function Report2Page() {
       label: "Achievements",
       sortable: true,
       align: "right" as const,
-      format: (value: number) => value.toLocaleString(),
+      render: (value: number) => (
+        <div className="flex items-center gap-1">
+          <RiTrophyLine className="w-4 h-4 text-yellow-500" />
+          <span>{value.toLocaleString()}</span>
+        </div>
+      ),
     },
     {
       key: "retention_score",
       label: "Retention",
       sortable: true,
       align: "right" as const,
-      format: (value: number) => value.toFixed(0),
+      render: (value: number) => (
+        <div className="flex items-center gap-1">
+          <RiTimeLine className="w-4 h-4 text-blue-500" />
+          <span>{value.toFixed(0)}</span>
+        </div>
+      ),
     },
   ];
 

@@ -6,7 +6,10 @@ import {
   CommonMetrics,
 } from "@/components/reports/ReportMetrics";
 import { useGamePerformanceReport } from "@/hooks/useGamePerformanceReport";
-import { RiGamepadLine, RiTrophyLine } from "@remixicon/react";
+import { ReportImage } from "@/components/reports/ReportImage";
+import { GameTags } from "@/components/reports/JSONBadge";
+import { RiGamepadLine, RiTrophyLine, RiStarLine } from "@remixicon/react";
+import type { GamePerformanceReport } from "@/lib/types/hybrid-data";
 
 export default function Report1Page() {
   const { data, isLoading } = useGamePerformanceReport();
@@ -167,9 +170,40 @@ export default function Report1Page() {
   // Table columns
   const tableColumns = [
     {
+      key: "cover_image_url",
+      label: "Cover",
+      sortable: false,
+      render: (value: string, record: GamePerformanceReport) => (
+        <ReportImage
+          src={value}
+          alt={record.game_title}
+          size="md"
+          className="w-12 h-12"
+        />
+      ),
+    },
+    {
       key: "game_title",
       label: "Game Title",
       sortable: true,
+      render: (value: string, record: GamePerformanceReport) => (
+        <div className="flex flex-col">
+          <span className="font-medium text-gray-900">{value}</span>
+          {record.total_reviews && (
+            <span className="text-xs text-gray-500">
+              {record.total_reviews.toLocaleString()} reviews
+            </span>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: "tags",
+      label: "Tags",
+      sortable: false,
+      render: (value: string[]) => (
+        <GameTags items={value} maxVisible={3} />
+      ),
     },
     {
       key: "genre",
@@ -180,6 +214,19 @@ export default function Report1Page() {
       key: "developer_name",
       label: "Developer",
       sortable: true,
+      render: (value: string, record: GamePerformanceReport) => (
+        <div className="flex items-center gap-2">
+          {record.logo_url && (
+            <ReportImage
+              src={record.logo_url}
+              alt={value}
+              size="sm"
+              className="w-6 h-6"
+            />
+          )}
+          <span>{value}</span>
+        </div>
+      ),
     },
     {
       key: "total_revenue",
@@ -207,7 +254,12 @@ export default function Report1Page() {
       label: "Rating",
       sortable: true,
       align: "right" as const,
-      format: (value: number) => value?.toFixed(1) || "N/A",
+      render: (value: number) => (
+        <div className="flex items-center gap-1">
+          <RiStarLine className="w-4 h-4 text-yellow-500" />
+          <span>{value?.toFixed(1) || "N/A"}</span>
+        </div>
+      ),
     },
   ];
 

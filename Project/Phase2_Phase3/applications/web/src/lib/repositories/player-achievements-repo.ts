@@ -137,10 +137,10 @@ export class PlayerAchievementsRepository {
               comparison = a.points - b.points;
               break;
             case "rarity":
-              const rarityOrder = { 'Legendary': 4, 'Epic': 3, 'Rare': 2, 'Common': 1 };
+              { const rarityOrder = { 'Legendary': 4, 'Epic': 3, 'Rare': 2, 'Common': 1 };
               comparison = (rarityOrder[a.rarity as keyof typeof rarityOrder] || 0) -
                            (rarityOrder[b.rarity as keyof typeof rarityOrder] || 0);
-              break;
+              break; }
           }
 
           return filters.sortOrder === "asc" ? comparison : -comparison;
@@ -161,10 +161,10 @@ export class PlayerAchievementsRepository {
               comparison = a.points - b.points;
               break;
             case "rarity":
-              const rarityOrder = { 'Legendary': 4, 'Epic': 3, 'Rare': 2, 'Common': 1 };
+              { const rarityOrder = { 'Legendary': 4, 'Epic': 3, 'Rare': 2, 'Common': 1 };
               comparison = (rarityOrder[a.rarity as keyof typeof rarityOrder] || 0) -
                            (rarityOrder[b.rarity as keyof typeof rarityOrder] || 0);
-              break;
+              break; }
           }
 
           return filters.sortOrder === "asc" ? comparison : -comparison;

@@ -6,7 +6,18 @@ import {
   CommonMetrics,
 } from "@/components/reports/ReportMetrics";
 import { useDeveloperSuccessReport } from "@/hooks/useDeveloperSuccessReport";
-import { RiBuilding2Line, RiGamepadLine, RiStarLine } from "@remixicon/react";
+import { ReportImage } from "@/components/reports/ReportImage";
+import { DeveloperSpecialties } from "@/components/reports/JSONBadge";
+import {
+  RiBuilding2Line,
+  RiGamepadLine,
+  RiStarLine,
+  RiMapPinLine,
+  RiCalendarLine,
+  RiTrophyLine,
+  RiTeamLine,
+} from "@remixicon/react";
+import type { DeveloperSuccessReport } from "@/lib/types/hybrid-data";
 
 export default function Report3Page() {
   const { data, isLoading } = useDeveloperSuccessReport();
@@ -36,18 +47,26 @@ export default function Report3Page() {
       // Prepare export data
       const exportData = data.map((item) => ({
         "Developer Name": String(item.developer_name || ""),
-        "Email": String(item.email || ""),
+        Email: String(item.email || ""),
         "Total Games": Number(item.total_games || 0).toString(),
         "Total Revenue": `$${Number(item.total_revenue || 0).toFixed(2)}`,
         "Revenue per Game": `$${Number(item.revenue_per_game || 0).toFixed(2)}`,
         "Total Players": Number(item.total_players || 0).toString(),
-        "Avg Game Rating": item.avg_game_rating ? Number(item.avg_game_rating).toFixed(1) : "N/A",
-        "Total Playtime (hrs)": Number(item.total_playtime_hours || 0).toFixed(1),
+        "Avg Game Rating": item.avg_game_rating
+          ? Number(item.avg_game_rating).toFixed(1)
+          : "N/A",
+        "Total Playtime (hrs)": Number(item.total_playtime_hours || 0).toFixed(
+          1
+        ),
         "Company Size": String(item.company_size || "N/A"),
-        "Founded Year": item.founded_year ? Number(item.founded_year).toString() : "N/A",
-        "Headquarters": String(item.headquarters || "N/A"),
-        "Specialties": item.specialties ? item.specialties.join(", ") : "N/A",
-        "Awards Count": item.awards_count ? Number(item.awards_count).toString() : "0",
+        "Founded Year": item.founded_year
+          ? Number(item.founded_year).toString()
+          : "N/A",
+        Headquarters: String(item.headquarters || "N/A"),
+        Specialties: item.specialties ? item.specialties.join(", ") : "N/A",
+        "Awards Count": item.awards_count
+          ? Number(item.awards_count).toString()
+          : "0",
       }));
 
       // Generate filename with current date
@@ -85,11 +104,13 @@ export default function Report3Page() {
 
       // Prepare export data - only include simple fields for PDF
       const exportData = data.map((item) => ({
-        "Developer": String(item.developer_name || ""),
-        "Games": Number(item.total_games || 0).toString(),
-        "Revenue": `$${Number(item.total_revenue || 0).toLocaleString()}`,
-        "Players": Number(item.total_players || 0).toLocaleString(),
-        "Avg Rating": item.avg_game_rating ? Number(item.avg_game_rating).toFixed(1) : "N/A",
+        Developer: String(item.developer_name || ""),
+        Games: Number(item.total_games || 0).toString(),
+        Revenue: `$${Number(item.total_revenue || 0).toLocaleString()}`,
+        Players: Number(item.total_players || 0).toLocaleString(),
+        "Avg Rating": item.avg_game_rating
+          ? Number(item.avg_game_rating).toFixed(1)
+          : "N/A",
         "Company Size": String(item.company_size || "N/A"),
       }));
 
@@ -97,7 +118,11 @@ export default function Report3Page() {
       const date = new Date().toISOString().split("T")[0];
       const filename = `developer-success-report-${date}`;
 
-      PDFExportService.quickExport(exportData, "Developer Success Dashboard", filename);
+      PDFExportService.quickExport(
+        exportData,
+        "Developer Success Dashboard",
+        filename
+      );
       setExportSuccess(`Successfully exported report to PDF`);
     } catch (error) {
       setExportError(
@@ -158,19 +183,92 @@ export default function Report3Page() {
       ]
     : [];
 
+  // Helper functions for displaying company metadata
+  const getSizeColor = (size?: string) => {
+    if (!size) return "text-gray-500";
+    if (size.includes("Indie")) return "text-green-600";
+    if (size.includes("Small")) return "text-blue-600";
+    if (size.includes("Medium")) return "text-purple-600";
+    if (size.includes("Large")) return "text-orange-600";
+    return "text-gray-600";
+  };
+
   // Table columns
   const tableColumns = [
     {
       key: "developer_name",
-      label: "Developer Name",
+      label: "Developer",
       sortable: true,
+      render: (value: string, record: DeveloperSuccessReport) => (
+        <div className="flex items-center gap-3">
+          <ReportImage
+            src={record.logo_url}
+            alt={value}
+            size="md"
+            className="w-10 h-10"
+            fallbackText={value
+              .split(" ")
+              .map((w) => w[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 2)}
+          />
+          <div className="flex flex-col">
+            <span className="font-medium text-gray-900">{value}</span>
+            {record.company_size && (
+              <span
+                className={`text-xs font-medium ${getSizeColor(
+                  record.company_size
+                )}`}
+              >
+                {record.company_size}
+              </span>
+            )}
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "specialties",
+      label: "Specialties",
+      sortable: false,
+      render: (value: string[]) => (
+        <DeveloperSpecialties items={value} maxVisible={3} />
+      ),
+    },
+    {
+      key: "headquarters",
+      label: "Location",
+      sortable: true,
+      render: (value: string) => (
+        <div className="flex items-center gap-1">
+          <RiMapPinLine className="w-4 h-4 text-gray-400" />
+          <span className="text-sm">{value || "Unknown"}</span>
+        </div>
+      ),
+    },
+    {
+      key: "founded_year",
+      label: "Founded",
+      sortable: true,
+      render: (value: number) => (
+        <div className="flex items-center gap-1">
+          <RiCalendarLine className="w-4 h-4 text-gray-400" />
+          <span className="text-sm">{value || "N/A"}</span>
+        </div>
+      ),
     },
     {
       key: "total_games",
       label: "Games",
       sortable: true,
       align: "right" as const,
-      format: (value: number) => value.toLocaleString(),
+      render: (value: number) => (
+        <div className="flex items-center justify-end gap-1">
+          <RiGamepadLine className="w-4 h-4 text-blue-500" />
+          <span>{value.toLocaleString()}</span>
+        </div>
+      ),
     },
     {
       key: "total_revenue",
@@ -180,31 +278,40 @@ export default function Report3Page() {
       format: (value: number) => `$${value.toLocaleString()}`,
     },
     {
-      key: "revenue_per_game",
-      label: "Revenue/Game",
-      sortable: true,
-      align: "right" as const,
-      format: (value: number) => `$${value.toLocaleString()}`,
-    },
-    {
       key: "total_players",
       label: "Players",
       sortable: true,
       align: "right" as const,
-      format: (value: number) => value.toLocaleString(),
+      render: (value: number) => (
+        <div className="flex items-center justify-end gap-1">
+          <RiTeamLine className="w-4 h-4 text-green-500" />
+          <span>{value.toLocaleString()}</span>
+        </div>
+      ),
     },
     {
       key: "avg_game_rating",
       label: "Avg Rating",
       sortable: true,
       align: "right" as const,
-      format: (value: number) => value?.toFixed(1) || "N/A",
+      render: (value: number) => (
+        <div className="flex items-center justify-end gap-1">
+          <RiStarLine className="w-4 h-4 text-yellow-500" />
+          <span>{value?.toFixed(1) || "N/A"}</span>
+        </div>
+      ),
     },
     {
-      key: "company_size",
-      label: "Company Size",
+      key: "awards_count",
+      label: "Awards",
       sortable: true,
-      format: (value: string) => value || "N/A",
+      align: "right" as const,
+      render: (value: number) => (
+        <div className="flex items-center justify-end gap-1">
+          <RiTrophyLine className="w-4 h-4 text-yellow-600" />
+          <span>{value?.toLocaleString() || "0"}</span>
+        </div>
+      ),
     },
   ];
 
