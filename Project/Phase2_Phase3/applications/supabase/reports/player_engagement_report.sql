@@ -149,9 +149,3 @@ ORDER BY pd.retention_score DESC,
     pd.total_playtime_hours DESC;
 END;
 $$;
--- Example usage:
--- SELECT * FROM get_player_engagement_report();
--- SELECT * FROM get_player_engagement_report(p_country := 'USA');
--- SELECT * FROM get_player_engagement_report(p_min_level := 10, p_max_level := 50);
--- SELECT * FROM get_player_engagement_report(p_privacy_setting := 'public', p_theme := 'dark');
--- SELECT * FROM get_player_engagement_report(p_min_achievements := 20);
